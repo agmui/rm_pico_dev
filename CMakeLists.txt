@@ -18,27 +18,27 @@ if (PICO_SDK_VERSION_STRING VERSION_LESS "1.4.0")
   message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.4.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
 endif()
 
-project(canbus C CXX ASM)
+project(rm_pico_dev C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(canbus canbus.cpp )
+add_executable(rm_pico_dev canbus.cpp )
 
-pico_set_program_name(canbus "canbus")
-pico_set_program_version(canbus "0.1")
+pico_set_program_name(rm_pico_dev "canbus")
+pico_set_program_version(rm_pico_dev "0.1")
 
-pico_enable_stdio_uart(canbus 0)
-pico_enable_stdio_usb(canbus 1)
+pico_enable_stdio_uart(rm_pico_dev 0)
+pico_enable_stdio_usb(rm_pico_dev 1)
 
 # Add the standard library to the build
-target_link_libraries(canbus
+target_link_libraries(rm_pico_dev
         pico_stdlib)
 
 # Add the standard include files to the build
-target_include_directories(canbus PRIVATE
+target_include_directories(rm_pico_dev PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
 #   ~/pico/pico-sdk/src/rp2040/
@@ -52,12 +52,12 @@ target_link_libraries(can2040 pico_stdlib
         hardware_dma
         cmsis_core
 )
-target_link_libraries(canbus 
+target_link_libraries(rm_pico_dev 
         can2040
         )
 
 # Add any user requested libraries
-target_link_libraries(canbus 
+target_link_libraries(rm_pico_dev 
         hardware_pio
 
         pico_base_headers
@@ -65,5 +65,5 @@ target_link_libraries(canbus
         cmsis_core
         )
 
-pico_add_extra_outputs(canbus)
+pico_add_extra_outputs(rm_pico_dev)
 
