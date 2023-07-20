@@ -1,79 +1,108 @@
-#include <stdio.h>
+/**
+ * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #include "pico/stdlib.h"
-#include "hardware/pio.h"
-extern "C"{
-    #include "can2040.h"
-}
-#include "RP2040.h"
+#include "hardware/uart.h"
+#include "hardware/irq.h"
+#include <stdio.h>
 
-typedef struct can2040_msg CANMsg;
-static struct can2040 cbus;
+/// \tag::uart_advanced[]
 
-static void
-can2040_cb(struct can2040 *cd, uint32_t notify, struct can2040_msg *msg)
+#define UART_ID uart0
+#define BAUD_RATE 100000
+#define DATA_BITS 8
+#define STOP_BITS 1
+#define PARITY UART_PARITY_EVEN
+
+// We are using pins 0 and 1, but see the GPIO function select table in the
+// datasheet for information on which other pins can be used.
+#define UART_TX_PIN 0
+#define UART_RX_PIN 1
+
+static int chars_rxed = 0;
+
+// RX interrupt handler
+void on_uart_rx()
 {
-    // Add message processing code here...
+    uint8_t data[6];
+    while (uart_is_readable(UART_ID))
+    {
+        printf("\n===\n");
+        // uint8_t ch = uart_getc(UART_ID);
+        uart_read_blocking(UART_ID, data, 6);
+        printf("\n==\n");
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                data[j] = data[j]<<i;
+            }
+            
+            printf("shift %d from uart: %#012x\n", i, data);
+        }
+        
+    }
 }
-
-static void
-PIOx_IRQHandler(void)
-{
-    can2040_pio_irq_handler(&cbus);
-}
-
-void
-canbus_setup(void)
-{
-    uint32_t pio_num = 0;
-    uint32_t sys_clock = 125000000, bitrate = 500000;
-    uint32_t gpio_rx = 4, gpio_tx = 5;
-
-    // Setup canbus
-    can2040_setup(&cbus, pio_num);
-    can2040_callback_config(&cbus, can2040_cb);
-
-    // Enable irqs
-    irq_set_exclusive_handler(PIO0_IRQ_0_IRQn, PIOx_IRQHandler);
-    NVIC_SetPriority(PIO0_IRQ_0_IRQn, 1);
-    NVIC_EnableIRQ(PIO0_IRQ_0_IRQn);
-
-    // Start canbus
-    can2040_start(&cbus, sys_clock, bitrate, gpio_rx, gpio_tx);
-}
-
 
 int main()
 {
-    stdio_init_all();
-    canbus_setup();
+    // Set up our UART with a basic baud rate.
+    uart_init(UART_ID, 2400);
+
+    // Set the TX and RX pins by using the function select on the GPIO
+    // Set datasheet for more information on function select
+    gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
+    gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
+
+    // Actually, we want a different speed
+    // The call will return the actual baud rate selected, which will be as close as
+    // possible to that requested
+    int __unused actual = uart_set_baudrate(UART_ID, BAUD_RATE);
+
+    // Set UART flow control CTS/RTS, we don't want these, so turn them off
+    uart_set_hw_flow(UART_ID, false, false);
+
+    // Set our data format
+    uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
+
+    // Turn off FIFO's - we want to do this character by character
+    uart_set_fifo_enabled(UART_ID, false);
+
+    // Set up a RX interrupt
+    // We need to set up the handler first
+    // Select correct interrupt for the UART we are using
+    int UART_IRQ = UART_ID == uart0 ? UART0_IRQ : UART1_IRQ;
+
+    // And set up and enable the interrupt handlers
+    irq_set_exclusive_handler(UART_IRQ, on_uart_rx);
+    irq_set_enabled(UART_IRQ, true);
+
+    // Now enable the UART to send interrupts - RX only
+    uart_set_irq_enables(UART_ID, true, false);
+
+    // OK, all set up.
+    // Lets send a basic string out, and then run a loop and wait for RX interrupts
+    // The handler will count them, but also reflect the incoming data back with a slight change!
+    // uart_puts(UART_ID, "\nHello, uart interrupts\n");
 
     const uint LED_PIN = PICO_DEFAULT_LED_PIN;
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
-    while (true) {
-        CANMsg msg = {0};
-        msg.dlc = 8;
-        msg.id = 0x200;
-        msg.data[0] = 0x01;
-        msg.data[1] = 0x01;
-        msg.data[2] = 0x01;
-        msg.data[3] = 0x01;
-        msg.data[4] = 0x01;
-        msg.data[5] = 0x01;
-        msg.data[6] = 0x01;
-        msg.data[7] = 0x01;
-        int res = can2040_transmit(&cbus, &msg);
-        printf("Sending! returned: %d\n", res);
-
-        printf("LED ON!\n");
+    uint8_t data[6];
+    stdio_init_all();
+    while (1)
+    {
+        // printf("LED ON!\n");
         gpio_put(LED_PIN, 1);
         sleep_ms(250);
-        printf("LED OFF!\n");
+        // printf("LED OFF!\n");
         gpio_put(LED_PIN, 0);
         sleep_ms(250);
-        sleep_ms(1000);
+        tight_loop_contents();
     }
-
-
-    return 0;
 }
+
+/// \end:uart_advanced[]

@@ -41,9 +41,6 @@ target_link_libraries(rm_pico_dev
 target_include_directories(rm_pico_dev PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
-#   ~/pico/pico-sdk/src/rp2040/
-#   ~/pico/pico-sdk/src/rp2_common/cmsis/stub/CMSIS/Core/Include/
-#   ~/pico/pico-sdk/src/rp2_common/cmsis/stub/CMSIS/Device/RaspberryPi/RP2040/Include/
 )
 
 add_library(can2040 can2040.c can2040.h)
