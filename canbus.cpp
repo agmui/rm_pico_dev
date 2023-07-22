@@ -8,6 +8,7 @@
 #include "hardware/uart.h"
 #include "hardware/irq.h"
 #include <stdio.h>
+#include <iostream>
 
 /// \tag::uart_advanced[]
 
@@ -23,34 +24,55 @@
 #define UART_RX_PIN 1
 
 static int chars_rxed = 0;
+static uint8_t data[18]{0};
+static uint8_t save_data[18]{0};
+uint32_t last_read = 0;
+
+void parse_data()
+{
+    printf("\nBREAK: ");
+    for (int i = 0; i < 18; i++)
+    {
+        printf("%x,", data[i]);
+        save_data[i] = data[i];
+        data[i] = 0;
+    }
+    printf("\n");
+    chars_rxed = 0;
+}
 
 // RX interrupt handler
 void on_uart_rx()
 {
-    uint8_t data[6];
+    if (time_us_32() - last_read > 300)
+    {
+        // std::cout << time_us_32() - last_read << std::endl;
+        chars_rxed = 0;
+    }
     while (uart_is_readable(UART_ID))
     {
-        printf("\n===\n");
-        // uint8_t ch = uart_getc(UART_ID);
-        uart_read_blocking(UART_ID, data, 6);
-        printf("\n==\n");
-        for (int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 6; j++)
-            {
-                data[j] = data[j]<<i;
-            }
-            
-            printf("shift %d from uart: %#012x\n", i, data);
-        }
-        
+        uint8_t ch = uart_getc(UART_ID);
+        last_read = time_us_32();
+        // printf("ch: %#x\n", ch);
+        data[chars_rxed] = ch;
+        chars_rxed++;
+        // uart_read_blocking(UART_ID, data, 18);
+
+        // printf("\n");
+        // for (int i = 0; i < 18; i++)
+        //     printf("%x,", data[i]);
+        // printf("\n");
+
+        if (chars_rxed >= 18)
+            parse_data();
+
+        // printf("%d\n", chars_rxed);
     }
 }
-
 int main()
 {
     // Set up our UART with a basic baud rate.
-    uart_init(UART_ID, 2400);
+    uart_init(UART_ID, BAUD_RATE); // 2400);
 
     // Set the TX and RX pins by using the function select on the GPIO
     // Set datasheet for more information on function select
@@ -60,7 +82,7 @@ int main()
     // Actually, we want a different speed
     // The call will return the actual baud rate selected, which will be as close as
     // possible to that requested
-    int __unused actual = uart_set_baudrate(UART_ID, BAUD_RATE);
+    // int __unused actual = uart_set_baudrate(UART_ID, BAUD_RATE);
 
     // Set UART flow control CTS/RTS, we don't want these, so turn them off
     uart_set_hw_flow(UART_ID, false, false);
@@ -91,17 +113,33 @@ int main()
     const uint LED_PIN = PICO_DEFAULT_LED_PIN;
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
-    uint8_t data[6];
+    // uint8_t data[18];
     stdio_init_all();
+    // uart_read_blocking(UART_ID, data, 18);
     while (1)
     {
-        // printf("LED ON!\n");
+        /*if (data[0] == 0)
+        {
+            printf("reading..\n");
+            while (uart_is_readable(UART_ID))
+            {
+                uart_read_blocking(UART_ID, data, 18);
+                break;
+            }
+        }*/
+
+        printf(".");
         gpio_put(LED_PIN, 1);
         sleep_ms(250);
-        // printf("LED OFF!\n");
         gpio_put(LED_PIN, 0);
         sleep_ms(250);
-        tight_loop_contents();
+
+        // printf("\ndata: ");
+        // for (int i = 0; i < 18; i++)
+        //     printf("%x,", save_data[i]);
+        // printf("\n");
+
+        // tight_loop_contents();
     }
 }
 
