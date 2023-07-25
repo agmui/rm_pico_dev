@@ -2,3 +2,11 @@
 	path = lib/can2040
 	url = https://github.com/KevinOConnor/can2040.git
 	shallow = true
+[submodule "lib/no-OS-FatFS-SD-SPI-RPi-Pico"]
+	path = lib/no-OS-FatFS-SD-SPI-RPi-Pico
+	url = https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico.git
+	shallow = true
+[submodule "lib/pico-sdk"]
+	path = lib/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk.git
+	shallow = true
