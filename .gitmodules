@@ -4,4 +4,5 @@
 [submodule "pico-sdk"]
 	path = pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
+	depth = 1
 	shallow = true
