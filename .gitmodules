@@ -6,19 +6,3 @@
 	path = pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
 	shallow = true
-
-[submodule "pico-sdk/tinyusb"]
-	path = pico-sdk/tinyusb
-	url = https://github.com/hathach/tinyusb.git
-[submodule "pico-sdk/lib/cyw43-driver"]
-	path = pico-sdk/lib/cyw43-driver
-	url = https://github.com/georgerobotics/cyw43-driver.git
-[submodule "pico-sdk/lib/lwip"]
-	path = pico-sdk/lib/lwip
-	url = https://github.com/lwip-tcpip/lwip.git
-[submodule "pico-sdk/lib/mbedtls"]
-	path = pico-sdk/lib/mbedtls
-	url = https://github.com/Mbed-TLS/mbedtls.git
-[submodule "pico-sdk/lib/btstack"]
-	path = pico-sdk/lib/btstack
-	url = https://github.com/bluekitchen/btstack.git
