@@ -1,0 +1,4 @@
+[submodule "lib/can2040"]
+	path = lib/can2040
+	url = https://github.com/KevinOConnor/can2040.git
+	shallow = true
