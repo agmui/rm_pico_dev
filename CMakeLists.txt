@@ -9,32 +9,54 @@ project("rm_pico_dev"
 )
 
 set(CMAKE_C_STANDARD 11)
-# set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+# here you can see how instead of writing "SomeLibrary"
+# we can just use the PROJECT_NAME variable
 add_library(${PROJECT_NAME} STATIC)
 
+# Here go the library target and its sources
 target_sources(${PROJECT_NAME}
     PRIVATE
         src/drivers.cpp
 )
 
+# Include directories
 target_include_directories(${PROJECT_NAME}
     PRIVATE
+        # where the library itself will look for its internal headers
         ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC
+        # where top-level project will look for the library's public headers
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         # where external projects will look for the library's public headers
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 
+#==================== linking submodules ====================  
 target_link_libraries(${PROJECT_NAME}
     pico_stdlib
 )
 
 
+# canbus
+add_library(can2040 lib/can2040/src/can2040.c lib/can2040/src/can2040.h)
+target_link_libraries(can2040 pico_stdlib
+        pico_base_headers
+        hardware_dma
+        cmsis_core
+)
+target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
 
+# SD card
+add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
+target_link_libraries(${PROJECT_NAME} FatFs_SPI)
+
+
+# Seting public header
 # without it public headers won't get installed
 set(public_headers
     include/drivers.hpp
