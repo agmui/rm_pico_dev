@@ -7,12 +7,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Initialise pico_sdk from installed location
 # (note this can come from environment, CMake cache etc)
-set(PICO_SDK_PATH "/home/agmui/cs/pico/pico-sdk")
+#set(PICO_SDK_PATH "/home/agmui/cs/pico/pico-sdk")
 
-set(PICO_BOARD pico CACHE STRING "Board type")
+#set(PICO_BOARD pico CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
-include(pico_sdk_import.cmake)
+#include(pico_sdk_import.cmake)
+include(lib/pico-sdk/pico_sdk_init.cmake)
 
 if (PICO_SDK_VERSION_STRING VERSION_LESS "1.4.0")
   message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.4.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
@@ -25,7 +26,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(rm_pico_dev canbus.cpp )
+add_executable(rm_pico_dev app/main.cpp)
 
 pico_set_program_name(rm_pico_dev "canbus")
 pico_set_program_version(rm_pico_dev "0.1")
@@ -43,19 +44,29 @@ target_include_directories(rm_pico_dev PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
 )
 
-add_library(can2040 can2040.c can2040.h)
+#==================== libs ====================  
+# can2040
+add_library(can2040 lib/can2040/src/can2040.c lib/can2040/src/can2040.h)
 target_link_libraries(can2040 pico_stdlib
         pico_base_headers
         hardware_dma
         cmsis_core
 )
-target_link_libraries(rm_pico_dev 
-        can2040
-        )
+# target_link_libraries(rm_pico_dev 
+#         can2040
+#         )
+target_include_directories(rm_pico_dev PRIVATE lib/can2040/src/)
+
+# SD card
+add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
+# target_link_libraries(rm_pico_dev FatFs_SPI)
 
 # Add any user requested libraries
 target_link_libraries(rm_pico_dev 
         hardware_pio
+
+        can2040
+        FatFs_SPI
 
         pico_base_headers
         hardware_dma

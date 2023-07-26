@@ -1,5 +1,14 @@
 # rm_pico_dev
 
+cloning this repo
+```bash
+git clone --shallow-submodules https://github.com/agmui/rm_pico_dev.git
+cd rm_pico_dev
+git submodule update --init
+cd lib/pico-sdk
+git submodule update --init
+```
+
 To read printout:  
 `screen /dev/ttyACM0 9600`
 
