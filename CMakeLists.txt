@@ -1,77 +1,42 @@
-# Generated Cmake Pico project file
+#used this guide: https://decovar.dev/blog/2021/03/08/cmake-cpp-library/
+# git: https://github.com/retifrav/cmake-library-example/blob/master/internal-project/libraries/SomeLibrary/CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.13)
 
+project("rm_pico_dev"
+    VERSION 0.9.1
+    DESCRIPTION "Some library"
+)
+
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Initialise pico_sdk from installed location
-# (note this can come from environment, CMake cache etc)
-#set(PICO_SDK_PATH "/home/agmui/cs/pico/pico-sdk")
+add_library(${PROJECT_NAME} STATIC)
 
-#set(PICO_BOARD pico CACHE STRING "Board type")
-
-# Pull in Raspberry Pi Pico SDK (must be before project)
-#include(pico_sdk_import.cmake)
-include(lib/pico-sdk/pico_sdk_init.cmake)
-
-if (PICO_SDK_VERSION_STRING VERSION_LESS "1.4.0")
-  message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.4.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
-endif()
-
-project(rm_pico_dev C CXX ASM)
-
-# Initialise the Raspberry Pi Pico SDK
-pico_sdk_init()
-
-# Add executable. Default name is the project name, version 0.1
-
-add_executable(rm_pico_dev app/main.cpp)
-
-pico_set_program_name(rm_pico_dev "canbus")
-pico_set_program_version(rm_pico_dev "0.1")
-
-pico_enable_stdio_uart(rm_pico_dev 0)
-pico_enable_stdio_usb(rm_pico_dev 1)
-
-# Add the standard library to the build
-target_link_libraries(rm_pico_dev
-        pico_stdlib)
-
-# Add the standard include files to the build
-target_include_directories(rm_pico_dev PRIVATE
-  ${CMAKE_CURRENT_LIST_DIR}
-  ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
+target_sources(${PROJECT_NAME}
+    PRIVATE
+        src/drivers.cpp
 )
 
-#==================== libs ====================  
-# can2040
-add_library(can2040 lib/can2040/src/can2040.c lib/can2040/src/can2040.h)
-target_link_libraries(can2040 pico_stdlib
-        pico_base_headers
-        hardware_dma
-        cmsis_core
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # where external projects will look for the library's public headers
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-# target_link_libraries(rm_pico_dev 
-#         can2040
-#         )
-target_include_directories(rm_pico_dev PRIVATE lib/can2040/src/)
 
-# SD card
-add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
-# target_link_libraries(rm_pico_dev FatFs_SPI)
 
-# Add any user requested libraries
-target_link_libraries(rm_pico_dev 
-        hardware_pio
+target_link_libraries(${PROJECT_NAME}
+    pico_stdlib
+)
 
-        can2040
-        FatFs_SPI
 
-        pico_base_headers
-        hardware_dma
-        cmsis_core
-        )
 
-pico_add_extra_outputs(rm_pico_dev)
+# without it public headers won't get installed
+set(public_headers
+    include/drivers.hpp
+)
 
