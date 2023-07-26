@@ -13,14 +13,32 @@ set(CMAKE_CXX_STANDARD 17)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-# here you can see how instead of writing "SomeLibrary"
+# here you can see how instead of writing "rm_pico_dev"
 # we can just use the PROJECT_NAME variable
 add_library(${PROJECT_NAME} STATIC)
+
 
 # Here go the library target and its sources
 target_sources(${PROJECT_NAME}
     PRIVATE
+        src/communications/CanBus.cpp
+        src/communications/CanBus.h
+        src/communications/RefSerial.cpp
+        src/communications/RefSerialData.h
+        src/communications/Remote.cpp
+        src/communications/Uart.cpp
+        src/Debug/Debug.cpp
+        src/Debug/File.h
+        src/Debug/SDCard.cpp
+        src/Debug/TextFile.cpp
+        src/Debug/TextFile.h
+        src/Debug/Yaml.cpp
+        src/Debug/Yaml.h
         src/drivers.cpp
+        src/DjiMotor.cpp
+        src/ImuInterface.h
+        src/MotorHandler.cpp
+        src/MPU6050.cpp
 )
 
 # Include directories
@@ -56,9 +74,13 @@ add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
 target_link_libraries(${PROJECT_NAME} FatFs_SPI)
 
 
+# get every header file
+file(GLOB_RECURSE HEADER
+    "include/*.h"
+)
 # Seting public header
 # without it public headers won't get installed
 set(public_headers
-    include/drivers.hpp
+    HEADER
 )
 
