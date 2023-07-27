@@ -1,6 +1,10 @@
 #ifndef PICO_DJIMOTOR_H_
 #define PICO_DJIMOTOR_H_
 
+#include <cinttypes>
+#include "../src/communications/CanBus.h"
+#include "drivers.h"
+
 namespace pico::motor
 {
     /**
@@ -42,7 +46,7 @@ namespace pico::motor
      * @note Currently there is no error handling for using a motor without having it be properly
      * initialize. You must call the `initialize` function in order for this class to work properly.
      */
-    class DjiMotor : public can::CanRxListener, public MotorInterface
+    class DjiMotor : public can::CanBus
     {
     public:
         // 0 - 8191 for dji motors
@@ -64,21 +68,19 @@ namespace pico::motor
         DjiMotor(
             Drivers *drivers,
             MotorId desMotorIdentifier,
-            tap::can::CanBus motorCanBus,
+            pico::can::CanBus motorCanBus,
             bool isInverted,
             const char *name,
             uint16_t encoderWrapped = ENC_RESOLUTION / 2,
             int64_t encoderRevolutions = 0);
 
-        mockable ~DjiMotor();
+        ~DjiMotor();
 
-        void initialize() override;
+        void initialize();
 
-        int64_t getEncoderUnwrapped() const override;
+        int64_t getEncoderUnwrapped();
 
-        uint16_t getEncoderWrapped() const override;
-
-        DISALLOW_COPY_AND_ASSIGN(DjiMotor)
+        uint16_t getEncoderWrapped();
 
         /**
          * Overrides virtual method in the can class, called every time a message with the
@@ -87,7 +89,8 @@ namespace pico::motor
          *
          * @param[in] message the message to be processed.
          */
-        void processMessage(const modm::can::Message &message) override;
+        // void processMessage(const modm::can::Message &message);
+        void processMessage(const struct can2040_msg &message);
 
         /**
          * Set the desired output for the motor. The meaning of this value is motor
@@ -99,42 +102,43 @@ namespace pico::motor
          *      user should make sure their value is in range. The declaration takes an int32_t
          *      in hopes to mitigate overflow.
          */
-        void setDesiredOutput(int32_t desiredOutput) override;
+        void setDesiredOutput(int32_t desiredOutput);
 
         /**
          * @return `true` if a CAN message has been received from the motor within the last
          *      `MOTOR_DISCONNECT_TIME` ms, `false` otherwise.
          */
-        bool isMotorOnline() const override;
+        bool isMotorOnline();
 
         /**
          * Serializes send data and deposits it in a message to be sent.
          */
-        mockable void serializeCanSendData(modm::can::Message *txMessage) const;
+        // void serializeCanSendData(modm::can::Message *txMessage) const;
+        void serializeCanSendData(struct can2040_msg *txMessage) const;
 
         /**
          * @return the raw `desiredOutput` value which will be sent to the motor controller
          *      (specified via `setDesiredOutput()`)
          */
-        int16_t getOutputDesired() const override;
+        int16_t getOutputDesired();
 
-        mockable uint32_t getMotorIdentifier() const;
+        uint32_t getMotorIdentifier() const;
 
         /**
          * @return the temperature of the motor as reported by the motor in degrees Celsius
          */
-        int8_t getTemperature() const override;
+        int8_t getTemperature();
 
-        int16_t getTorque() const override;
+        int16_t getTorque();
 
         /// For interpreting the sign of return value see class comment
-        int16_t getShaftRPM() const override;
+        int16_t getShaftRPM();
 
-        mockable bool isMotorInverted() const;
+        bool isMotorInverted() const;
 
-        mockable tap::can::CanBus getCanBus() const;
+        pico::can::CanBus getCanBus() const;
 
-        mockable const char *getName() const;
+        const char *getName() const;
 
         template <typename T>
         static void assertEncoderType()
@@ -207,7 +211,7 @@ namespace pico::motor
          */
         int64_t encoderRevolutions;
 
-        tap::arch::MilliTimeout motorDisconnectTimeout;
+        // tap::arch::MilliTimeout motorDisconnectTimeout; //TODO:
     };
 
 }

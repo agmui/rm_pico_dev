@@ -18,7 +18,7 @@ namespace pico::communication::serial
  * Receive information from the referee serial by continuously calling `messageReceiveCallback`.
  * Access data sent by the referee serial by calling `getRobotData` or `getGameData`.
  */
-class RefSerial : public DJISerial, public RefSerialData
+class RefSerial : public RefSerialData
 {
 private:
     /**
@@ -124,7 +124,7 @@ private:
     modm::BoundedDeque<Rx::DamageEvent, DPS_TRACKER_DEQUE_SIZE> receivedDpsTracker;
     arch::MilliTimeout refSerialOfflineTimeout;
     std::unordered_map<uint16_t, RobotToRobotMessageHandler*> msgIdToRobotToRobotHandlerMap;
-    Uart uart;
+    DJISerial djiSerial;
 
     /**
      * Decodes ref serial message containing the game stage and time remaining

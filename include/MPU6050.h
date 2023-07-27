@@ -1,7 +1,7 @@
 #ifndef PICO_MPU6050_H_
 #define PICO_MPU6050_H_
 
-#include "ImuInterface.h"
+#include "../src/ImuInterface.h"
 
 namespace pico::communication::sensors::imu::mpu6050
 {
