@@ -15,24 +15,24 @@ namespace pico
     {
     protected:
         Drivers()
-            : Debug(this),
-              MotorHandler(this),
-              MPU6050(this),
-              RefSerial(this),
-              Remote(this),
-              SDCard(this),
-              Uart()
+            : debug(this),
+              motorHandler(this),
+              mpu6050(this),
+              refSerial(this),
+              remote(this),
+              sdCard(this),
+              uart()
         {
         }
 
     public:
-        Debug::Debug debug;
-        MotorHandler motorHandler;
-        MPU6050 mpu6050;
-        RefSerial refSerial;
-        Remote remote;
-        SDCard sdCard;
-        Uart uart;
+        debugtools::Debug debug;
+        motor::MotorHandler motorHandler;
+        communication::sensors::imu::mpu6050::MPU6050 mpu6050;
+        communication::serial::RefSerial refSerial;
+        communication::serial::Remote remote;
+        debugtools::SDCard sdCard;
+        pico::communication::serial::Uart uart;
     };
 
 } // namespace driver

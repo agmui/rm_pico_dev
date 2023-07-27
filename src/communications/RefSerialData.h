@@ -1,6 +1,13 @@
 #ifndef PICO_REFSERIALDATA_H_
 #define PICO_REFSERIALDATA_H_
 
+#include <cinttypes>
+
+#include "big_constants.h"
+#define modm_packed				__attribute__((packed)) // TODO: find out if you need this
+
+#include "DJISerial.h"
+
 namespace pico::communication::serial
 {
 /**
@@ -108,7 +115,7 @@ public:
             CHASSIS_HAS_POWER = modm::Bit1,  ///< 1 if there is 24V output to chassis, 0 for 0V.
             SHOOTER_HAS_POWER = modm::Bit2,  ///< 1 if there is 24V output to shooter, 0 for 0V.
         };
-        MODM_FLAGS8(RobotPower);
+        // MODM_FLAGS8(RobotPower); //TODO: find out if you need these
 
         enum class RobotBuffStatus : uint8_t
         {
@@ -117,7 +124,7 @@ public:
             ROBOT_DEFENSE_BUFF = modm::Bit2,                ///< Rboot in a defense buff zone
             ROBOT_ATTACK_BUFF = modm::Bit3,                 ///< Robot in an attack buff zone
         };
-        MODM_FLAGS8(RobotBuffStatus);
+        // MODM_FLAGS8(RobotBuffStatus); //TODO: find out if you need these
 
         /// Activation status flags for the RFID module (for RMUC only).
         enum class RFIDActivationStatus : uint8_t
@@ -133,7 +140,7 @@ public:
             ENGINEER_RESTORATION = modm::Bit7,  ///< Engineer's RFID swipe card is beneath RFID card
                                                 ///< and is activating the card
         };
-        MODM_FLAGS8(RFIDActivationStatus);
+        // MODM_FLAGS8(RFIDActivationStatus); //TODO: find out if you need these
 
         struct DamageEvent
         {

@@ -1,7 +1,7 @@
 #ifndef PICO_IMU_INTERFACE_H_
 #define PICO_IMU_INTERFACE_H_
 
-namespace tap::communication::sensors::imu
+namespace pico::communication::sensors::imu
 {
 /**
  * An interface for interacting with a 6 axis IMU.
@@ -85,6 +85,6 @@ public:
      */
     virtual inline float getRoll() = 0;
 };
-}  // namespace tap::communication::sensors::imu
+}  // namespace pico::communication::sensors::imu
 
 #endif //  PICO_IMU_INTERFACE_H_

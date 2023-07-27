@@ -1,7 +1,7 @@
 #ifndef PICO_UART_H_
 #define PICO_UART_H_
 
-namespace tap::communication::serial
+namespace pico::communication::serial
 {
     class Uart
     {
@@ -11,7 +11,7 @@ namespace tap::communication::serial
         Uart(/* args */);
         ~Uart();
     };
-} // namespace tap::communication::serial
+} // namespace pico::communication::serial
 
 
 #endif //  PICO_UART_H_

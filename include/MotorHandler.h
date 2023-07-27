@@ -1,25 +1,29 @@
 #ifndef PICO_MOTORHANDLER_H_
 #define PICO_MOTORHANDLER_H_
 
+#include "DjiMotor.h"
+
 namespace pico
 {
     class Drivers;
 }
 
-namespace motor
+namespace pico::motor
 {
 
     class MotorHandler
     {
     private:
-        DjiMotor[] DjiMotors;
+        Drivers *drivers;
+        DjiMotor *DjiMotors[8] = {0};
+
     public:
         MotorHandler(Drivers *drivers) : drivers(drivers) {}
         ~MotorHandler();
-        void addMotorToManger(DjiMotor* motor);
+        void addMotorToManger(DjiMotor *motor);
         void pollCanData();
         void encodeAndSendCanData();
-        void removeMotorFromManager(DjiMotor* motor);
+        void removeMotorFromManager(DjiMotor *motor);
     };
 
 }

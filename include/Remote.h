@@ -1,7 +1,17 @@
+//code from taproot
+
 #ifndef PICO_REMOTE_H_
 #define PICO_REMOTE_H_
 
-namespace tap::communication::serial
+#include <cstdint>
+#include "Uart.h"
+
+namespace pico
+{
+    class Drivers;
+}
+
+namespace pico::communication::serial
 {
     /**
      * A unique UART handler that uses timing in leu of DBUS communication (modm does not
@@ -15,7 +25,7 @@ namespace tap::communication::serial
     {
     public:
         Remote(Drivers *drivers) : drivers(drivers) {}
-        mockable ~Remote() = default;
+        ~Remote() = default;
 
         /**
          * Specifies a particular joystick.
@@ -74,13 +84,13 @@ namespace tap::communication::serial
         /**
          * Enables and initializes `bound_ports::REMOTE_SERIAL_UART_PORT`.
          */
-        mockable void initialize();
+        void initialize();
 
         /**
          * Reads/parses the current buffer and updates the current remote info state
          * and `CommandMapper` state.
          */
-        mockable void read();
+        void read();
 
         /**
          * @return `true` if the remote is connected, `false` otherwise.
@@ -88,47 +98,47 @@ namespace tap::communication::serial
          *      second or so of delay from disconnecting the remote to this function saying
          *      the remote is disconnected.
          */
-        mockable bool isConnected() const;
+        bool isConnected() const;
 
         /**
          * @return The value of the given channel, between [-1, 1].
          */
-        mockable float getChannel(Channel ch) const;
+        float getChannel(Channel ch) const;
 
         /**
          * @return The state of the given switch.
          */
-        mockable SwitchState getSwitch(Switch sw) const;
+        SwitchState getSwitch(Switch sw) const;
 
         /**
          * @return The current mouse x value.
          */
-        mockable inline int16_t getMouseX() const { return remote.mouse.x; }
+        inline int16_t getMouseX() const { return remote.mouse.x; }
 
         /**
          * @return The current mouse y value.
          */
-        mockable inline int16_t getMouseY() const { return remote.mouse.y; }
+        inline int16_t getMouseY() const { return remote.mouse.y; }
 
         /**
          * @return The current mouse z value.
          */
-        mockable inline int16_t getMouseZ() const { return remote.mouse.z; }
+        inline int16_t getMouseZ() const { return remote.mouse.z; }
 
         /**
          * @return The current mouse l value.
          */
-        mockable inline bool getMouseL() const { return remote.mouse.l; }
+        inline bool getMouseL() const { return remote.mouse.l; }
 
         /**
          * @return The current mouse r value.
          */
-        mockable inline bool getMouseR() const { return remote.mouse.r; }
+        inline bool getMouseR() const { return remote.mouse.r; }
 
         /**
          * @return `true` if the given `key` is pressed, `false` otherwise.
          */
-        mockable inline bool keyPressed(Key key) const
+        inline bool keyPressed(Key key) const
         {
             return (remote.key & (1 << static_cast<uint8_t>(key))) != 0;
         }
@@ -136,12 +146,12 @@ namespace tap::communication::serial
         /**
          * @return the value of the wheel, between `[-STICK_MAX_VALUE, STICK_MAX_VALUE]`.
          */
-        mockable inline int16_t getWheel() const { return remote.wheel; }
+        inline int16_t getWheel() const { return remote.wheel; }
 
         /**
          * @return the number of times remote info has been received.
          */
-        mockable uint32_t getUpdateCounter() const;
+        uint32_t getUpdateCounter() const;
 
     private:
         static const int REMOTE_BUF_LEN = 18;             ///< Length of the remote recieve buffer.
@@ -182,7 +192,7 @@ namespace tap::communication::serial
 
         /// UART recieve buffer.
         uint8_t rxBuffer[REMOTE_BUF_LEN]{0};
-        Uart uart;
+        Uart *uart;
 
         /// Timestamp when last byte was read (milliseconds).
         uint32_t lastRead = 0;
@@ -200,6 +210,6 @@ namespace tap::communication::serial
         void reset();
     }; // class Remote
 
-} // namespace tap::communication::serial
+} // namespace pico::communication::serial
 
 #endif //  PICO_REMOTE_H_

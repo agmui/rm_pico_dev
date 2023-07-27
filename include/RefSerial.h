@@ -1,5 +1,20 @@
+//code from taproot
+
 #ifndef  PICO_REFSERIAL_H_
 #define  PICO_REFSERIAL_H_
+
+#include <cstdint>
+#include <unordered_map>
+
+#include "../src/communications/RefSerialData.h"
+#include "../src/communications/DJISerial.h"
+
+
+namespace pico
+{
+    class Drivers;
+}
+
 
 namespace pico::communication::serial
 {
@@ -18,7 +33,7 @@ namespace pico::communication::serial
  * Receive information from the referee serial by continuously calling `messageReceiveCallback`.
  * Access data sent by the referee serial by calling `getRobotData` or `getGameData`.
  */
-class RefSerial : public RefSerialData
+class RefSerial : public DJISerial, public RefSerialData
 {
 private:
     /**
@@ -73,24 +88,24 @@ public:
      * @see `DjiSerial`
      */
     RefSerial(Drivers* drivers);
-    mockable ~RefSerial() = default;
+    ~RefSerial() = default;
 
     /**
      * Handles the types of messages defined above in the RX message handlers section.
      */
     void messageReceiveCallback(const ReceivedSerialMessage& completeMessage) override;
 
-    mockable bool getRefSerialReceivingData() const;
+    bool getRefSerialReceivingData() const;
 
     /**
      * Returns a reference to the most up to date robot data struct.
      */
-    mockable const Rx::RobotData& getRobotData() const;
+    const Rx::RobotData& getRobotData() const;
 
     /**
      * Returns a reference to the most up to date game data struct.
      */
-    mockable const Rx::GameData& getGameData() const;
+    const Rx::GameData& getGameData() const;
 
     /**
      * Returns a robot id that is of the same color of this robot's
@@ -98,9 +113,9 @@ public:
      * and then based on your team it will be sent to the correct robot
      * (your team not the enemy team's robot).
      */
-    mockable RobotId getRobotIdBasedOnCurrentRobotTeam(RobotId id);
+    RobotId getRobotIdBasedOnCurrentRobotTeam(RobotId id);
 
-    mockable void attachRobotToRobotMessageHandler(
+    void attachRobotToRobotMessageHandler(
         uint16_t msgId,
         RobotToRobotMessageHandler* handler);
 
@@ -108,9 +123,9 @@ public:
      * Used by `RefSerialTransmitter`. It is necessary to acquire this lock to coordinate sending
      * ref serial data from different protothreads.
      */
-    mockable void acquireTransmissionSemaphore() { transmissionSemaphore.acquire(); }
+    // void acquireTransmissionSemaphore() { transmissionSemaphore.acquire(); }
 
-    mockable void releaseTransmissionSemaphore() { transmissionSemaphore.release(); }
+    // void releaseTransmissionSemaphore() { transmissionSemaphore.release(); }
 
     /**
      * @return True if the robot operator is blinded, false otherwise. Also return false if the
@@ -121,10 +136,10 @@ public:
 private:
     Rx::RobotData robotData;
     Rx::GameData gameData;
-    modm::BoundedDeque<Rx::DamageEvent, DPS_TRACKER_DEQUE_SIZE> receivedDpsTracker;
-    arch::MilliTimeout refSerialOfflineTimeout;
+    // modm::BoundedDeque<Rx::DamageEvent, DPS_TRACKER_DEQUE_SIZE> receivedDpsTracker; //TODO: find out if this is needed
+    // arch::MilliTimeout refSerialOfflineTimeout; //TODO: find out if this is needed
     std::unordered_map<uint16_t, RobotToRobotMessageHandler*> msgIdToRobotToRobotHandlerMap;
-    DJISerial djiSerial;
+    DJISerial *djiSerial;
 
     /**
      * Decodes ref serial message containing the game stage and time remaining

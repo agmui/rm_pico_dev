@@ -1,9 +1,15 @@
+//code from taproot
+
 #ifndef PICO_DJIMOTOR_H_
 #define PICO_DJIMOTOR_H_
 
 #include <cinttypes>
 #include "../src/communications/CanBus.h"
-#include "drivers.h"
+
+namespace pico
+{
+    class Drivers;
+}
 
 namespace pico::motor
 {

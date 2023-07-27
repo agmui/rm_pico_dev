@@ -1,5 +1,8 @@
 # rm_pico_dev
 
+This is a [taproot](https://github.com/uw-advanced-robotics/taproot) port to work on the pi pico.
+taproot github: https://github.com/uw-advanced-robotics/taproot
+
 cloning this repo
 ```bash
 git clone --shallow-submodules https://github.com/agmui/rm_pico_dev.git

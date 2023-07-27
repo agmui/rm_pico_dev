@@ -14,15 +14,6 @@ namespace pico::can
         ~CanBus();
     };
     
-    CanBus::CanBus(/* args */)
-    {
-    }
-    
-    CanBus::~CanBus()
-    {
-    }
-    
-    
 } // namespace pico::can
 
 
