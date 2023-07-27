@@ -1,6 +1,10 @@
 
 #ifndef PICO_DJISERIAL_H_
 #define PICO_DJISERIAL_H_
+
+#include <cstdint>
+#include "Uart.h"
+
 namespace pico
 {
     class Drivers;
@@ -77,9 +81,9 @@ namespace pico::communication::serial
                 header.headByte = 0xa5;
                 header.dataLength = sizeof(data);
                 header.seq = seq;
-                header.CRC8 = tap::algorithms::calculateCRC8(
+                header.CRC8 = 0;/*tap::algorithms::calculateCRC8(
                     reinterpret_cast<uint8_t *>(&header),
-                    sizeof(header) - 1);
+                    sizeof(header) - 1);*/  //FIXME:
             }
 
             /**
@@ -88,9 +92,9 @@ namespace pico::communication::serial
              */
             void setCRC16()
             {
-                CRC16 = tap::algorithms::calculateCRC16(
+                CRC16 = 0; /*tap::algorithms::calculateCRC16(
                     reinterpret_cast<uint8_t *>(this),
-                    sizeof(*this) - 2);
+                    sizeof(*this) - 2);*/ //FIXME:
             }
 
             FrameHeader header;
@@ -110,8 +114,8 @@ namespace pico::communication::serial
          * @param[in] port serial port to work on.
          * @param[in] isRxCRCEnforcementEnabled `true` to enable Rx CRC Enforcement.
          */
-        DJISerial(Drivers *drivers, Uart::UartPort port, bool isRxCRCEnforcementEnabled = true);
-        DISALLOW_COPY_AND_ASSIGN(DJISerial)
+        DJISerial(Drivers *drivers, Uart *port, bool isRxCRCEnforcementEnabled = true);
+        // DISALLOW_COPY_AND_ASSIGN(DJISerial) //TODO:
         ~DJISerial() = default;
 
         /**
@@ -153,7 +157,8 @@ namespace pico::communication::serial
         };
 
         /// The serial port you are connected to.
-        Uart::UartPort port;
+        // Uart::UartPort port;
+        Uart *port;
 
         /// stuff for RX, buffers to store parts of the header, state machine.
         SerialRxState djiSerialRxState;
@@ -183,7 +188,7 @@ namespace pico::communication::serial
          */
         inline bool verifyCRC8(uint8_t *message, uint32_t messageLength, uint8_t expectedCRC8)
         {
-            return tap::algorithms::calculateCRC8(message, messageLength) == expectedCRC8;
+            return false; //tap::algorithms::calculateCRC8(message, messageLength) == expectedCRC8; //FIXME:
         }
 
     protected:

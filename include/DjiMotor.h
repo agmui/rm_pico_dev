@@ -3,6 +3,8 @@
 #ifndef PICO_DJIMOTOR_H_
 #define PICO_DJIMOTOR_H_
 
+#include <string>
+
 #include <cinttypes>
 #include "../src/communications/CanBus.h"
 

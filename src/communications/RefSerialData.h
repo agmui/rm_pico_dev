@@ -269,7 +269,7 @@ public:
                                       ///< previousHp = currentHp.
             uint16_t currentHp;       ///< Current health of this robot.
             uint16_t maxHp;           ///< Max health of this robot.
-            RobotPower_t robotPower;  ///< Flags indicating which parts of the robot have power
+            RobotPower robotPower;//RobotPower_t robotPower;  ///< Flags indicating which parts of the robot have power //FIXME:
             ArmorId damagedArmorId;   ///< Armor ID that was damaged.
             DamageType damageType;    ///< Cause of damage.
             float receivedDps;        ///< Damage per second received.
@@ -277,10 +277,10 @@ public:
             TurretData turret;        ///< Turret firing and heat data.
             RobotHpData allRobotHp;   ///< Current HP of all the robots.
             uint16_t remainingCoins;  ///< Number of remaining coins left to spend.
-            RobotBuffStatus_t robotBuffStatus;  ///< Status of all buffs on the robot
+            RobotBuffStatus robotBuffStatus;//RobotBuffStatus_t robotBuffStatus;  ///< Status of all buffs on the robot //FIXME:
             uint16_t aerialEnergyStatus;  ///< Countdown timer that indicates how much time the
                                           ///< aerial has left to fire
-            RFIDActivationStatus_t rfidStatus;      ///< The current status of which RFID zones
+            RFIDActivationStatus rfidStatus;//RFIDActivationStatus_t rfidStatus;      ///< The current status of which RFID zones //FIXME:
                                                     ///< are being activated by the current robot.
             uint32_t robotDataReceivedTimestamp;    ///< Most recent time at which data with message
                                                     ///< id `REF_MESSAGE_TYPE_ROBOT_STATUS` has been
