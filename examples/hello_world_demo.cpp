@@ -15,9 +15,11 @@ int main(int argc, char const *argv[])
 
         // Turn On LED
         gpio_put(25, 1); // Set pin 25 to high
+        sleep_ms(250);
         printf("LED switched on!\n");
         // Turn Off LED
         gpio_put(25, 0); // Set pin 25 to high.
+        sleep_ms(250);
         printf("LED switched off!\n");
     }
 }

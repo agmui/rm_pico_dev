@@ -35,6 +35,7 @@ target_sources(${PROJECT_NAME}
         src/Debug/Yaml.cpp
         src/Debug/Yaml.h
         src/drivers.cpp
+        src/clock.h
         src/DjiMotor.cpp
         src/ImuInterface.h
         src/MotorHandler.cpp

@@ -14,25 +14,51 @@ namespace pico
     class Drivers
     {
     protected:
+        // Drivers()
+        //     : debug(this),
+        //       //   motorHandler(this),
+        //       //   mpu6050(this),
+        //       //   refSerial(this),
+        //       remote(this),
+        //       //   sdCard(this),
+        //       uart()
+        // {
+        // }
+
+        // static Drivers *drivers;
+
+    public: // TODO: make thread safe?
         Drivers()
             : debug(this),
-              motorHandler(this),
-              mpu6050(this),
-              refSerial(this),
+              //   motorHandler(this),
+              //   mpu6050(this),
+              //   refSerial(this),
               remote(this),
-              sdCard(this),
+              //   sdCard(this),
               uart()
         {
         }
 
-    public:
         debugtools::Debug debug;
-        motor::MotorHandler motorHandler;
-        communication::sensors::imu::mpu6050::MPU6050 mpu6050;
-        communication::serial::RefSerial refSerial;
+        // motor::MotorHandler motorHandler;
+        // communication::sensors::imu::mpu6050::MPU6050 mpu6050;
+        // communication::serial::RefSerial refSerial;
         communication::serial::Remote remote;
-        debugtools::SDCard sdCard;
+        // debugtools::SDCard sdCard;
         pico::communication::serial::Uart uart;
+
+        // shoud now be cloneable
+        // Drivers(Drivers &other) = delete;
+
+        // void operator=(const Drivers &) = delete;
+
+        // static Drivers *getDrivers();
+        /*static Drivers *getDrivers()
+        {
+            if (drivers == nullptr)
+                drivers = new Drivers();
+            return drivers;
+        }*/
     };
 
 } // namespace driver

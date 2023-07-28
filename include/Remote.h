@@ -192,13 +192,16 @@ namespace pico::communication::serial
 
         /// UART recieve buffer.
         uint8_t rxBuffer[REMOTE_BUF_LEN]{0};
-        Uart *uart;
+
+        // selected UART port
+        Uart::UartPort uart_port;
+        uart_inst_t *uart_id;
 
         /// Timestamp when last byte was read (milliseconds).
-        uint32_t lastRead = 0;
+        uint32_t last_read = 0;
 
         /// Current count of bytes read.
-        uint8_t currentBufferIndex = 0;
+        uint8_t chars_rxed = 0;
 
         /// Parses the current rxBuffer.
         void parseBuffer();
