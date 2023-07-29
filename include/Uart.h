@@ -20,6 +20,8 @@ namespace pico::communication::serial
             Uart0,
             Uart1
         };
+        uart_inst_t *uartPortToId[2] = {uart0, uart1};// to convert between UartPort and uart id
+
         enum Parity
         {
             Disabled,
@@ -70,7 +72,7 @@ namespace pico::communication::serial
          * @param[in] port the port's buffer to discard.
          * @return the size of the deleted FIFO queue.
          */
-        // std::size_t discardReceiveBuffer(UartPort port);
+        std::size_t discardReceiveBuffer(UartPort port);
 
         /**
          * Pushes a single byte into the buffer.
@@ -101,7 +103,7 @@ namespace pico::communication::serial
          */
         bool isWriteFinished(UartPort port) const;
 
-        // void flushWriteBuffer(UartPort port);
+        void flushWriteBuffer(UartPort port);
 
 
         /**

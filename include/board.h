@@ -13,6 +13,8 @@
 namespace Board
 {
     const pico::communication::serial::Uart::UartPort REMOTE_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart0;
+    const pico::communication::serial::Uart::UartPort REF_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart1;
+
 } // namespace Board
 
 #endif // PICO_BOARD_H_

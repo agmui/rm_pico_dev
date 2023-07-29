@@ -21,25 +21,34 @@ add_library(${PROJECT_NAME} STATIC)
 # Here go the library target and its sources
 target_sources(${PROJECT_NAME}
     PRIVATE
-        src/communications/CanBus.cpp
-        src/communications/CanBus.h
+        # src/algorithms/crc.cpp
+        # src/algorithms/crc.hpp
+        # src/communications/big_constants.h
+        # src/communications/CanBus.cpp
+        # src/communications/CanBus.h
+        src/communications/DJISerial.cpp
+        src/communications/DJISerial.h
         src/communications/RefSerial.cpp
         src/communications/RefSerialData.h
         src/communications/Remote.cpp
         src/communications/Uart.cpp
-        src/Debug/Debug.cpp
-        src/Debug/File.h
-        src/Debug/SDCard.cpp
-        src/Debug/TextFile.cpp
-        src/Debug/TextFile.h
-        src/Debug/Yaml.cpp
-        src/Debug/Yaml.h
-        src/drivers.cpp
-        src/clock.h
-        src/DjiMotor.cpp
-        src/ImuInterface.h
+        # src/Debug/Debug.cpp
+        # src/Debug/File.h
+        # src/Debug/SDCard.cpp
+        # src/Debug/TextFile.cpp
+        # src/Debug/TextFile.h
+        # src/Debug/Yaml.cpp
+        # src/Debug/Yaml.h
+        # src/modm/deque_impl.hpp
+        # src/modm/deque.hpp
+        # src/drivers.cpp
+        # src/endianness_wrappers.hpp
+        # src/clock.h
+        # src/DjiMotor.cpp
+        # src/ImuInterface.h
         src/MotorHandler.cpp
-        src/MPU6050.cpp
+        # src/MPU6050.cpp
+        # src/timeout.hpp
 )
 
 # Include directories

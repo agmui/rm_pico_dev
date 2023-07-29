@@ -47,10 +47,22 @@ namespace pico::communication::serial
         return false;
     }
 
+    std::size_t Uart::discardReceiveBuffer(UartPort port)
+    {
+        uart_inst_t *uart_id = getUartID(port);
+        uint8_t rx_drained_chars = 0;
+        while (uart_is_readable(uart_id))
+        {
+            uart_getc(uart_id);
+            rx_drained_chars++;
+        }
+        return rx_drained_chars;
+    }
+
     uart_inst_t *Uart::getUartID(UartPort port)
     {
-        return (port == UartPort::Uart0) ? uart0 : uart1;
-        // return uart0;
+        return uartPortToId[port];
+        // return (port == UartPort::Uart0) ? uart0 : uart1;
     }
 
     bool Uart::isReadable(UartPort port)

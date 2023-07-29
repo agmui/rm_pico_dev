@@ -52,7 +52,7 @@ public:
     {
     public:
         RobotToRobotMessageHandler() {}
-        virtual void operator()(const DJISerial::ReceivedSerialMessage &message) = 0;
+        virtual void operator()(const pico::communication::serial::DJISerial::ReceivedSerialMessage &message) = 0;
     };
 
     /**

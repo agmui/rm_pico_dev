@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include "Uart.h"
+#include "../algorithms/crc.hpp"
 
 namespace pico
 {
@@ -114,39 +115,39 @@ namespace pico::communication::serial
          * @param[in] port serial port to work on.
          * @param[in] isRxCRCEnforcementEnabled `true` to enable Rx CRC Enforcement.
          */
-        DJISerial(Drivers *drivers, Uart *port, bool isRxCRCEnforcementEnabled = true);
+        DJISerial(Drivers *drivers, Uart::UartPort port, bool isRxCRCEnforcementEnabled = true);
         // DISALLOW_COPY_AND_ASSIGN(DJISerial) //TODO:
         ~DJISerial() = default;
 
-        /**
-         * Initialize serial. In particular, initializes the hardware serial
-         * specified upon construction.
-         *
-         * @note currently, only uart ports 1, 2, and 6 are enabled. Be sure
-         *      to add a serial port to `uart.hpp` if you want to use the serial.
-         *      Also, if you add a new uart port to be generated in the `project.xml`
-         *      file, you should add it to both the `Uart` class and this function.
-         * @see `Uart`
-         */
-        void initialize();
+        // /**
+        //  * Initialize serial. In particular, initializes the hardware serial
+        //  * specified upon construction.
+        //  *
+        //  * @note currently, only uart ports 1, 2, and 6 are enabled. Be sure
+        //  *      to add a serial port to `uart.hpp` if you want to use the serial.
+        //  *      Also, if you add a new uart port to be generated in the `project.xml`
+        //  *      file, you should add it to both the `Uart` class and this function.
+        //  * @see `Uart`
+        //  */
+        // void initialize();
 
-        /**
-         * Receive messages. Call periodically in order to receive all
-         * incoming messages.
-         *
-         * @note tested with a delay of 10 microseconds with referee system. The
-         *      longer the timeout the more likely a message failure may occur.
-         */
-        void updateSerial();
+        // /**
+        //  * Receive messages. Call periodically in order to receive all
+        //  * incoming messages.
+        //  *
+        //  * @note tested with a delay of 10 microseconds with referee system. The
+        //  *      longer the timeout the more likely a message failure may occur.
+        //  */
+        // void updateSerial();
 
-        /**
-         * Called when a complete message is received. A derived class must
-         * implement this in order to handle incoming messages properly.
-         *
-         * @param[in] completeMessage a reference to the full message that has
-         *      just been received by this class.
-         */
-        virtual void messageReceiveCallback(const ReceivedSerialMessage &completeMessage) = 0;
+        // /**
+        //  * Called when a complete message is received. A derived class must
+        //  * implement this in order to handle incoming messages properly.
+        //  *
+        //  * @param[in] completeMessage a reference to the full message that has
+        //  *      just been received by this class.
+        //  */
+        // virtual void messageReceiveCallback(const ReceivedSerialMessage &completeMessage) = 0;
 
     private:
         enum SerialRxState
@@ -157,8 +158,7 @@ namespace pico::communication::serial
         };
 
         /// The serial port you are connected to.
-        // Uart::UartPort port;
-        Uart *port;
+        Uart::UartPort port;
 
         /// stuff for RX, buffers to store parts of the header, state machine.
         SerialRxState djiSerialRxState;

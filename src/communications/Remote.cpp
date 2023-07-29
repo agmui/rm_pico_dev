@@ -146,7 +146,7 @@ namespace pico::communication::serial
         {
             rxBuffer[i] = 0;
         }
-        // Note: I dont think i can clear the rx buffer on the pico
+        drivers->uart.discardReceiveBuffer(Board::REMOTE_SERIAL_UART_PORT);
     }
 
     void Remote::reset()
