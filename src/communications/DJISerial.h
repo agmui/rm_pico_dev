@@ -1,10 +1,28 @@
+/*
+ * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ *
+ * This file is part of Taproot.
+ *
+ * Taproot is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Taproot is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Taproot.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #ifndef PICO_DJISERIAL_H_
 #define PICO_DJISERIAL_H_
 
 #include <cstdint>
-#include "Uart.h"
 #include "../algorithms/crc.hpp"
+#include "Uart.h"
 
 namespace pico
 {
@@ -119,35 +137,35 @@ namespace pico::communication::serial
         // DISALLOW_COPY_AND_ASSIGN(DJISerial) //TODO:
         ~DJISerial() = default;
 
-        // /**
-        //  * Initialize serial. In particular, initializes the hardware serial
-        //  * specified upon construction.
-        //  *
-        //  * @note currently, only uart ports 1, 2, and 6 are enabled. Be sure
-        //  *      to add a serial port to `uart.hpp` if you want to use the serial.
-        //  *      Also, if you add a new uart port to be generated in the `project.xml`
-        //  *      file, you should add it to both the `Uart` class and this function.
-        //  * @see `Uart`
-        //  */
-        // void initialize();
+        /**
+         * Initialize serial. In particular, initializes the hardware serial
+         * specified upon construction.
+         *
+         * @note currently, only uart ports 1, 2, and 6 are enabled. Be sure
+         *      to add a serial port to `uart.hpp` if you want to use the serial.
+         *      Also, if you add a new uart port to be generated in the `project.xml`
+         *      file, you should add it to both the `Uart` class and this function.
+         * @see `Uart`
+         */
+        void initialize();
 
-        // /**
-        //  * Receive messages. Call periodically in order to receive all
-        //  * incoming messages.
-        //  *
-        //  * @note tested with a delay of 10 microseconds with referee system. The
-        //  *      longer the timeout the more likely a message failure may occur.
-        //  */
-        // void updateSerial();
+        /**
+         * Receive messages. Call periodically in order to receive all
+         * incoming messages.
+         *
+         * @note tested with a delay of 10 microseconds with referee system. The
+         *      longer the timeout the more likely a message failure may occur.
+         */
+        void updateSerial();
 
-        // /**
-        //  * Called when a complete message is received. A derived class must
-        //  * implement this in order to handle incoming messages properly.
-        //  *
-        //  * @param[in] completeMessage a reference to the full message that has
-        //  *      just been received by this class.
-        //  */
-        // virtual void messageReceiveCallback(const ReceivedSerialMessage &completeMessage) = 0;
+        /**
+         * Called when a complete message is received. A derived class must
+         * implement this in order to handle incoming messages properly.
+         *
+         * @param[in] completeMessage a reference to the full message that has
+         *      just been received by this class.
+         */
+        virtual void messageReceiveCallback(const ReceivedSerialMessage &completeMessage) = 0;
 
     private:
         enum SerialRxState
