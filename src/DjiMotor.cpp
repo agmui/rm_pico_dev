@@ -30,7 +30,7 @@ namespace pico
 {
 namespace motor
 {
-DjiMotor::~DjiMotor() { drivers->motorHandler.removeMotorFromManager(*this); }
+DjiMotor::~DjiMotor() { drivers->motorHandler.removeFromMotorManager(*this); }
 
 DjiMotor::DjiMotor(
     Drivers* drivers,

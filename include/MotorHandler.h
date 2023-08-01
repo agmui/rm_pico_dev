@@ -82,7 +82,7 @@ namespace pico::motor
         /**
          * Removes the motor from the motor manager.
          */
-        void removeMotorFromManager(const DjiMotor &motor);
+        void removeFromMotorManager(const DjiMotor &motor);
 
         DjiMotor const *getCan1Motor(MotorId motorId);
 
@@ -104,13 +104,10 @@ namespace pico::motor
             bool *validMotorMessageLow,
             bool *validMotorMessageHigh);
 
-        void processReceivedCanData(
-            const can2040_msg &rxMessage,
-            CanRxListener *const *messageHandlerStore);
+        void processReceivedCanData(const can2040_msg &rxMessage, DjiMotor **canMotorStore);
 
-        void MotorHandler::removeFromMotorManager(const DjiMotor &motor, DjiMotor **motorStore)
+        void removeFromMotorManager(const DjiMotor &motor, DjiMotor **motorStore);
     };
-
 }
 
 #endif //  PICO_MOTORHANDLER_H_

@@ -35,34 +35,34 @@ namespace pico::motor
         can2040_msg rxMessage;
 
         // handle incoming CAN 1 messages
-        if (drivers->can.getMessage(PioNum::CAN_BUS0, &rxMessage))
+        if (drivers->can.getMessage(pico::can::PioNum::CAN_BUS0, &rxMessage))
         {
-            processReceivedCanData(rxMessage, messageHandlerStoreCan1);
+            processReceivedCanData(rxMessage, can1MotorStore);
         }
 
         // handle incoming CAN 2 messages
-        if (drivers->can.getMessage(PioNum::CAN_BUS1, &rxMessage))
+        if (drivers->can.getMessage(pico::can::PioNum::CAN_BUS1, &rxMessage))
         {
-            processReceivedCanData(rxMessage, messageHandlerStoreCan2);
+            processReceivedCanData(rxMessage, can2MotorStore);
         }
     }
 
     void MotorHandler::processReceivedCanData(
         const can2040_msg &rxMessage,
-        CanRxListener *const *messageHandlerStore)
+        DjiMotor **canMotorStore)
     {
         uint16_t id = lookupTableIndexForCanId(rxMessage.id);
 
         if (id >= NUM_CAN_IDS)
         {
             // RAISE_ERROR(drivers, "Invalid can id received");
-            printf("Invalid can id received");
+            printf("Invalid can id received\n");
             return;
         }
 
-        if (messageHandlerStore[id] != nullptr)
+        if (canMotorStore[id] != nullptr)
         {
-            messageHandlerStore[id]->processMessage(rxMessage);
+            canMotorStore[id]->processMessage(rxMessage);
         }
     }
 
@@ -70,22 +70,18 @@ namespace pico::motor
     {
         // set up new can messages to be sent via CAN bus 1 and 2
         // TODO:
-        can2040_msg can1MessageLow(
-            CAN_DJI_LOW_IDENTIFIER,
-            CAN_DJI_MESSAGE_SEND_LENGTH,
-            0);
-        can2040_msg can1MessageHigh(
-            CAN_DJI_HIGH_IDENTIFIER,
-            CAN_DJI_MESSAGE_SEND_LENGTH,
-            0);
-        can2040_msg can2MessageLow(
-            CAN_DJI_LOW_IDENTIFIER,
-            CAN_DJI_MESSAGE_SEND_LENGTH,
-            0);
-        can2040_msg can2MessageHigh(
-            CAN_DJI_HIGH_IDENTIFIER,
-            CAN_DJI_MESSAGE_SEND_LENGTH,
-            0);
+        can2040_msg can1MessageLow = {
+            .id = CAN_DJI_LOW_IDENTIFIER,
+            .dlc = CAN_DJI_MESSAGE_SEND_LENGTH};
+        can2040_msg can1MessageHigh = {
+            .id = CAN_DJI_HIGH_IDENTIFIER,
+            .dlc = CAN_DJI_MESSAGE_SEND_LENGTH};
+        can2040_msg can2MessageLow = {
+            .id = CAN_DJI_LOW_IDENTIFIER,
+            .dlc = CAN_DJI_MESSAGE_SEND_LENGTH};
+        can2040_msg can2MessageHigh = {
+            .id = CAN_DJI_HIGH_IDENTIFIER,
+            .dlc = CAN_DJI_MESSAGE_SEND_LENGTH};
 
         bool can1ValidMotorMessageLow = false;
         bool can1ValidMotorMessageHigh = false;
@@ -134,7 +130,7 @@ namespace pico::motor
         if (!messageSuccess)
         {
             // RAISE_ERROR(drivers, "sendMessage failure");
-            printf("sendMessage failure");
+            printf("sendMessage failure\n");
         }
     }
 
@@ -180,10 +176,10 @@ namespace pico::motor
     void MotorHandler::removeFromMotorManager(const DjiMotor &motor, DjiMotor **motorStore)
     {
         uint32_t id = DJI_MOTOR_TO_NORMALIZED_ID(motor.getMotorIdentifier());
-        if (id > DJI_MOTOR_TO_NORMALIZED_ID(tap::motor::MOTOR8) || motorStore[id] == nullptr)
+        if (id > DJI_MOTOR_TO_NORMALIZED_ID(pico::motor::MOTOR8) || motorStore[id] == nullptr)
         {
             // RAISE_ERROR(drivers, "invalid motor id");
-            printf("invalid motor id");
+            printf("invalid motor id\n");
             return;
         }
         motorStore[id] = nullptr;
@@ -192,12 +188,12 @@ namespace pico::motor
     DjiMotor const *MotorHandler::getCan1Motor(MotorId motorId)
     {
         uint32_t index = DJI_MOTOR_TO_NORMALIZED_ID(motorId);
-        return index > DJI_MOTOR_TO_NORMALIZED_ID(tap::motor::MOTOR8) ? nullptr : can1MotorStore[index];
+        return index > DJI_MOTOR_TO_NORMALIZED_ID(pico::motor::MOTOR8) ? nullptr : can1MotorStore[index];
     }
 
     DjiMotor const *MotorHandler::getCan2Motor(MotorId motorId)
     {
         uint32_t index = DJI_MOTOR_TO_NORMALIZED_ID(motorId);
-        return index > DJI_MOTOR_TO_NORMALIZED_ID(tap::motor::MOTOR8) ? nullptr : can2MotorStore[index];
+        return index > DJI_MOTOR_TO_NORMALIZED_ID(pico::motor::MOTOR8) ? nullptr : can2MotorStore[index];
     }
 } // namespace pico::motor

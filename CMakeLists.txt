@@ -25,6 +25,12 @@ target_sources(${PROJECT_NAME}
     PRIVATE
         src/algorithms/crc.cpp
         src/algorithms/crc.hpp
+        src/algorithms/extended_kalman.cpp
+        src/algorithms/extended_kalman.hpp
+        src/algorithms/math_user_utils.cpp
+        src/algorithms/math_user_utils.hpp
+        src/algorithms/smooth_pid.cpp
+        src/algorithms/smooth_pid.hpp
         src/communications/can/can.cpp
         src/communications/can/can.hpp
         src/communications/can/CanBus.cpp
@@ -93,6 +99,8 @@ target_link_libraries(can2040
         hardware_dma
         cmsis_core
 )
+
+target_link_libraries(${PROJECT_NAME} can2040)
 target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
 
 # SD card

@@ -22,6 +22,7 @@
 // #include "modm/architecture/interface/can_message.hpp"
 // #include "modm/platform.hpp"
 
+#include "pico/stdlib.h"
 #include "board.h"
 // #include "tap/util_macros.hpp"
 
@@ -144,6 +145,7 @@ namespace pico::can
         switch (bus)
         {
         case PioNum::CAN_BUS0:
+            printf("%d", &cbus);
             return can2040_check_transmit(&cbus);//Can1::isReadyToSend();
         case PioNum::CAN_BUS1:
             return false;//Can2::isReadyToSend();//TODO

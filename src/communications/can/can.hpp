@@ -24,7 +24,8 @@
 
 extern "C"
 {
-#include "can2040.h"
+// #include "can2040.h"
+#include "../../../lib/can2040/src/can2040.h"
 }
 #include "CanBus.h"
 
@@ -46,8 +47,8 @@ class Can
 {
 private:
     // the pico uses irq for can
-    static struct can2040 cbus;
-    static can2040_msg message;
+    inline static struct can2040 cbus;
+    inline static can2040_msg message;
     static void can2040_cb(struct can2040 * cd, uint32_t notify, struct can2040_msg * msg);
     static void PIOx_IRQHandler(void);
     static int last_read;

@@ -24,7 +24,7 @@ namespace pico
               remote(this),
               uart(),
               sdCard(this),
-              can(this)
+              can()// TODO: maybe not needed
         {
         }
 
