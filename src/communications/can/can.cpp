@@ -146,6 +146,7 @@ namespace pico::can
         bool s;
         switch (bus)
         {
+        //FIXME: can2040_check_transmit returns false?
         case PioNum::CAN_BUS0:
             s = can2040_check_transmit(&cbus);
             printf("isReadyToSend cbus: %d\n", s);
