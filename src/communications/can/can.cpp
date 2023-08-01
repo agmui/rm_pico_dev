@@ -40,6 +40,7 @@ extern "C"
 #include "../../clock.h"
 
 #include <stdio.h>
+#include <iostream>
 
 
 #ifndef PLATFORM_HOSTED
@@ -72,7 +73,7 @@ namespace pico::can
     void pico::can::Can::initialize()
     {
 
-        last_read = 0;
+        last_read = pico::clock::getTimeMilliseconds();
         uint32_t pio_num = 0;
         uint32_t sys_clock = 125000000, bitrate = 1000000;
         uint32_t gpio_rx = CAN0_RX_PIN, gpio_tx = CAN0_TX_PIN;
@@ -142,11 +143,14 @@ namespace pico::can
 
     bool Can::isReadyToSend(PioNum bus) const
     {
+        bool s;
         switch (bus)
         {
         case PioNum::CAN_BUS0:
-            printf("%d", &cbus);
-            return can2040_check_transmit(&cbus);//Can1::isReadyToSend();
+            s = can2040_check_transmit(&cbus);
+            printf("isReadyToSend cbus: %d\n", s);
+            return true; //s;
+            // return can2040_check_transmit(&cbus);//Can1::isReadyToSend();
         case PioNum::CAN_BUS1:
             return false;//Can2::isReadyToSend();//TODO
         default:
@@ -156,6 +160,10 @@ namespace pico::can
 
     bool Can::sendMessage(PioNum bus, /*const*/ can2040_msg &message)
     {
+        std::cout << "sendMessage" << std::endl;
+        for (int i = 0; i < 8; i++)
+            printf("data: %#x\n",message.data[i]);
+        
         switch (bus)
         {
         case PioNum::CAN_BUS0:

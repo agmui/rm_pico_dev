@@ -51,7 +51,7 @@ private:
     inline static can2040_msg message;
     static void can2040_cb(struct can2040 * cd, uint32_t notify, struct can2040_msg * msg);
     static void PIOx_IRQHandler(void);
-    static int last_read;
+    inline static int last_read;
 public:
     Can() = default;
     // DISALLOW_COPY_AND_ASSIGN(Can)
