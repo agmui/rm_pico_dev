@@ -7,6 +7,8 @@ project("rm_pico_dev"
     VERSION 0.9.1
     DESCRIPTION "Some library"
 )
+# Initialise the Raspberry Pi Pico SDK
+pico_sdk_init()
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -23,9 +25,11 @@ target_sources(${PROJECT_NAME}
     PRIVATE
         src/algorithms/crc.cpp
         src/algorithms/crc.hpp
+        src/communications/can/can.cpp
+        src/communications/can/can.hpp
+        src/communications/can/CanBus.cpp
+        src/communications/can/CanBus.h
         src/communications/big_constants.h
-        src/communications/CanBus.cpp
-        src/communications/CanBus.h
         src/communications/DJISerial.cpp
         src/communications/DJISerial.h
         src/communications/RefSerial.cpp
@@ -67,12 +71,24 @@ target_include_directories(${PROJECT_NAME}
 #==================== linking submodules ====================  
 target_link_libraries(${PROJECT_NAME}
     pico_stdlib
-)
 
+    hardware_pio
+    pico_base_headers
+    hardware_dma
+    cmsis_core
+)
+# Add the standard include files to the build
+target_include_directories(${PROJECT_NAME} PRIVATE
+  ${CMAKE_CURRENT_LIST_DIR}
+  ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
+)
 
 # canbus
 add_library(can2040 lib/can2040/src/can2040.c lib/can2040/src/can2040.h)
-target_link_libraries(can2040 pico_stdlib
+target_link_libraries(can2040
+        hardware_pio
+
+        pico_stdlib
         pico_base_headers
         hardware_dma
         cmsis_core

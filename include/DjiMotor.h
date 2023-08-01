@@ -6,7 +6,8 @@
 #include <string>
 
 #include <cinttypes>
-#include "../src/communications/CanBus.h"
+#include "../src/communications/can/CanBus.h"
+#include "../src/timeout.hpp"
 
 namespace pico
 {
@@ -54,7 +55,7 @@ namespace pico::motor
      * @note Currently there is no error handling for using a motor without having it be properly
      * initialize. You must call the `initialize` function in order for this class to work properly.
      */
-    class DjiMotor : public can::CanBus
+    class DjiMotor //: public can::CanBus
     {
     public:
         // 0 - 8191 for dji motors
@@ -76,7 +77,7 @@ namespace pico::motor
         DjiMotor(
             Drivers *drivers,
             MotorId desMotorIdentifier,
-            pico::can::CanBus motorCanBus,
+            pico::can::PioNum motorCanBus,
             bool isInverted,
             const char *name,
             uint16_t encoderWrapped = ENC_RESOLUTION / 2,
@@ -86,9 +87,9 @@ namespace pico::motor
 
         void initialize();
 
-        int64_t getEncoderUnwrapped();
+        int64_t getEncoderUnwrapped() const;
 
-        uint16_t getEncoderWrapped();
+        uint16_t getEncoderWrapped() const;
 
         /**
          * Overrides virtual method in the can class, called every time a message with the
@@ -116,7 +117,7 @@ namespace pico::motor
          * @return `true` if a CAN message has been received from the motor within the last
          *      `MOTOR_DISCONNECT_TIME` ms, `false` otherwise.
          */
-        bool isMotorOnline();
+        bool isMotorOnline() const;
 
         /**
          * Serializes send data and deposits it in a message to be sent.
@@ -128,23 +129,23 @@ namespace pico::motor
          * @return the raw `desiredOutput` value which will be sent to the motor controller
          *      (specified via `setDesiredOutput()`)
          */
-        int16_t getOutputDesired();
+        int16_t getOutputDesired() const;
 
         uint32_t getMotorIdentifier() const;
 
         /**
          * @return the temperature of the motor as reported by the motor in degrees Celsius
          */
-        int8_t getTemperature();
+        int8_t getTemperature() const;
 
-        int16_t getTorque();
+        int16_t getTorque() const;
 
         /// For interpreting the sign of return value see class comment
-        int16_t getShaftRPM();
+        int16_t getShaftRPM() const;
 
         bool isMotorInverted() const;
 
-        pico::can::CanBus getCanBus() const;
+        pico::can::PioNum getCanBus() const;
 
         const char *getName() const;
 
@@ -187,7 +188,7 @@ namespace pico::motor
 
         uint32_t motorIdentifier;
 
-        pico::can::CanBus motorCanBus;
+        pico::can::PioNum motorCanBus;
 
         int16_t desiredOutput;
 
@@ -219,7 +220,7 @@ namespace pico::motor
          */
         int64_t encoderRevolutions;
 
-        // tap::arch::MilliTimeout motorDisconnectTimeout; //TODO:
+        pico::arch::MilliTimeout motorDisconnectTimeout;
     };
 
 }

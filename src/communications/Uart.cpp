@@ -44,7 +44,7 @@ namespace pico::communication::serial
         uart_read_blocking(getUartID(port), data, 1);
         // uint8_t ch = uart_getc(getUartID(port));
         // data = &ch;
-        return false;
+        return false;//TODO
     }
 
     std::size_t Uart::discardReceiveBuffer(UartPort port)

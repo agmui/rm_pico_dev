@@ -3,11 +3,12 @@
 
 #include "Debug.h"
 #include "MotorHandler.h"
-// #include "MPU6050.h"
+#include "MPU6050.h"
 #include "RefSerial.h"
 #include "Remote.h"
-// #include "SDCard.h"
+#include "SDCard.h"
 #include "Uart.h"
+#include "../src/communications/can/can.hpp"
 
 namespace pico
 {
@@ -18,12 +19,12 @@ namespace pico
         Drivers()
             : debug(this),
               motorHandler(this),
-            refSerial(this),
+              mpu6050(this),
+              refSerial(this),
               remote(this),
-              uart()
-            //   mpu6050(this),
-            //   refSerial(this),
-            //   sdCard(this),
+              uart(),
+              sdCard(this),
+              can(this)
         {
         }
 
@@ -32,11 +33,12 @@ namespace pico
 
         debugtools::Debug debug;
         motor::MotorHandler motorHandler;
-        // communication::sensors::imu::mpu6050::MPU6050 mpu6050;
+        communication::sensors::imu::mpu6050::MPU6050 mpu6050;
         communication::serial::RefSerial refSerial;
         communication::serial::Remote remote;
-        // debugtools::SDCard sdCard;
-        pico::communication::serial::Uart uart;
+        debugtools::SDCard sdCard;
+        communication::serial::Uart uart;
+        can::Can can;
 
         // shoud now be cloneable
         Drivers(Drivers &other) = delete;
