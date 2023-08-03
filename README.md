@@ -8,6 +8,11 @@ cloning this repo
 git clone --shallow-submodules https://github.com/agmui/rm_pico_dev.git
 cd rm_pico_dev
 git submodule update --init
+cd lib/pico-arduino-compat
+git submodule update --init arduino-compat/arduino-pico
+cd libs/retroterm
+./init.sh
+cd ../../../
 cd lib/pico-sdk
 git submodule update --init
 ```

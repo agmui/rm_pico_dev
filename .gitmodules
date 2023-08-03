@@ -10,3 +10,6 @@
 	path = lib/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
 	shallow = true
+[submodule "lib/pico-arduino-compat"]
+	path = lib/pico-arduino-compat
+	url = https://github.com/fhdm-dev/pico-arduino-compat.git

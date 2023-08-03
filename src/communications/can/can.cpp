@@ -33,9 +33,7 @@ extern "C"
 #include "pico/stdlib.h"
 
 #include "RP2040.h"
-// #include "lib/pico-sdk/src/rp2_common/cmsis/stub/CMSIS/Device/RaspberryPi/RP2040/Include/RP2040.h"// TODO: fix path
 #include "hardware/pio.h"
-// #include "lib/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pio.h"// TODO: fix path
 
 #include "../../clock.h"
 
@@ -58,8 +56,10 @@ namespace pico::can
         {
             printf("msg read: ");
             printf("%s\n", msg->data);
-            // for (int i = 0; i < 8; i++)
-            //     queue[i] = msg->data[i];
+            message.id = msg->id;
+            message.dlc = msg->id;
+            for (int i = 0; i < 8; i++)
+                message.data[i] = msg->data[i];
             last_read = pico::clock::getTimeMilliseconds();
         }
     }
@@ -90,26 +90,7 @@ namespace pico::can
         // Start canbus
         can2040_start(&cbus, sys_clock, bitrate, gpio_rx, gpio_tx);
 
-        // #ifndef PLATFORM_HOSTED
-        // CanFilter::setStartFilterBankForCan2(14);
-        // initialize CAN 1
-        // Can1::connect<GpioD0::Rx, GpioD1::Tx>(Gpio::InputType::PullUp);
-        // modm_assert((Can1::initialize<Board::SystemClock, 1000_kbps>(9)), "Can1", "initialize-failed");
-        // receive every message for CAN 1
-        // CanFilter::setFilter(
-        //     0,
-        //     CanFilter::FIFO0,
-        //     CanFilter::StandardIdentifier(0),
-        //     CanFilter::StandardFilterMask(0));
-        // Can2::connect<GpioB5::Rx, GpioB6::Tx>(Gpio::InputType::PullUp);
-        // modm_assert((Can2::initialize<Board::SystemClock, 1000_kbps>(12)), "Can2", "initialize-failed");
-        // receive every message for CAN 2
-        // CanFilter::setFilter(
-        //     14,
-        //     CanFilter::FIFO0,
-        //     CanFilter::StandardIdentifier(0),
-        //     CanFilter::StandardFilterMask(0));
-        // #endif
+
     }
 
     bool Can::isMessageAvailable(pico::can::PioNum bus) const
