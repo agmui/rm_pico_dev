@@ -78,11 +78,12 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     pico_stdlib
 
-    hardware_pio
-    pico_base_headers
-    hardware_dma
-    cmsis_core
+    # hardware_pio
+    # pico_base_headers
+    # hardware_dma
+    # cmsis_core
 )
+
 # Add the standard include files to the build
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
@@ -92,16 +93,23 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # canbus
 add_library(can2040 lib/can2040/src/can2040.c lib/can2040/src/can2040.h)
 target_link_libraries(can2040
-        hardware_pio
 
         pico_stdlib
         pico_base_headers
+        hardware_pio
         hardware_dma
         cmsis_core
 )
 
 target_link_libraries(${PROJECT_NAME} can2040)
 target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
+
+# arduino-compat retroterm
+add_subdirectory(lib/pico-arduino-compat/libs/retroterm)
+target_link_libraries(${PROJECT_NAME} 
+        pico_stdlib
+        pac-retroterm
+)
 
 # SD card
 add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
