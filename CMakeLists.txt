@@ -42,6 +42,12 @@ target_sources(${PROJECT_NAME}
         src/communications/RefSerialData.h
         src/communications/Remote.cpp
         src/communications/Uart.cpp
+        # src/Debug/UI_tests/singleButton.cpp
+        # src/Debug/UI_tests/terminalTest.cpp
+        # src/Debug/UI_tests/widgetTest.cpp
+        # src/Debug/Command.h
+        src/Debug/CLI.cpp
+        src/Debug/CLI.h
         src/Debug/Debug.cpp
         src/Debug/File.h
         src/Debug/SDCard.cpp
@@ -105,11 +111,12 @@ target_link_libraries(${PROJECT_NAME} can2040)
 target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
 
 # arduino-compat retroterm
-add_subdirectory(lib/pico-arduino-compat/libs/retroterm)
-target_link_libraries(${PROJECT_NAME} 
-        pico_stdlib
-        pac-retroterm
-)
+# add_subdirectory(lib/pico-arduino-compat/libs/retroterm)
+# target_link_libraries(${PROJECT_NAME} 
+#         pico_stdlib
+#         pac-retroterm
+# )
+# target_include_directories(${PROJECT_NAME} INTERFACE lib/pico-arduino-compat/libs/retroterm)
 
 # SD card
 add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
