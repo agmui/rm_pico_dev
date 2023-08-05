@@ -1,6 +1,16 @@
 #ifndef PICO_BOARD_H_
 #define PICO_BOARD_H_
 
+//spi section just for hw_config.c
+#define SD_CARD_MISO 12        // gpio
+#define SD_CARD_MOSI 15        // gpio
+#define SD_CARD_SCK 14         // gpio
+#define SD_CARD_SS 9           // gpio
+#define SD_CARD_CARD_DETECT 13 // gpio
+
+//TODO: fix
+#ifdef __cplusplus
+
 #include "hardware/uart.h"
 #include "Uart.h"
 #include <unordered_map>
@@ -20,20 +30,13 @@
 #define CAN1_RX_PIN 4//gpio
 #define CAN1_TX_PIN 5//gpio
 
-#define SD_CARD_MISO 12        // gpio
-#define SD_CARD_MOSI 15        // gpio
-#define SD_CARD_SCK 14         // gpio
-#define SD_CARD_SS 9           // gpio
-#define SD_CARD_CARD_DETECT 13 // gpio
-
 namespace Board
 {
     const pico::communication::serial::Uart::UartPort REMOTE_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart0;
     const pico::communication::serial::Uart::UartPort REF_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart1;
 
-    const std::unordered_map<std::string, pico::Command *> command_map = {
-        {"test", new pico::TestCmd()},
-        {"ls", new pico::ls()}};
 
 } // namespace Board
+#endif
+
 #endif // PICO_BOARD_H_

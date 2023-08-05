@@ -7,11 +7,14 @@
 #include <stdio.h>
 #include <string>
 
+#include <stdlib.h>
+#include <string.h>
+
 using namespace std;
 
 namespace debugtools
 {
-    //Todo: use irq
+    // Todo: use irq
     bool CLI::readUSB()
     {
         // std::cout << "reading" << std::endl;
@@ -42,21 +45,28 @@ namespace debugtools
 
     bool CLI::findCommand()
     {
-        unordered_map<string, pico::Command *>::const_iterator cmd = Board::command_map.find(string(buffer));
-        if (cmd == Board::command_map.end())
+        // if (!isprint(ch) && !isspace(ch) && '\r' != ch &&
+        //     '\b' != ch && ch != (char)127)
+        //     return;
+        // printf("%c", ch); // echo
+
+        stdio_flush();
+        // TODO make thread safe(strtok is not thread safe)
+        unordered_map<string, pico::cmd_def_t>::const_iterator cmd = pico::command_map.find(string(strtok(buffer," ")));
+        if (cmd == pico::command_map.end())
         {
             std::cout << "> \"" << buffer << "\" is an not a command" << std::endl;
             return false;
         }
         // std::cout << "> running: " << buffer << std::endl;
-        queue.push(cmd->second);
+        queue.push(new pico::CLI_Cmd(drivers, cmd->second.function));
         return true;
     }
 
-    pico::Command *CLI::getNextCommand()
+    pico::CLI_Cmd *CLI::getNextCommand()
     {
         // TODO: check if queue empty
-        pico::Command *cmd = queue.front();
+        pico::CLI_Cmd *cmd = queue.front();
         queue.pop();
         return cmd;
     }

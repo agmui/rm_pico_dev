@@ -1,3 +1,6 @@
+#ifndef PICO_FILE_H_
+#define PICO_FILE_H_
+
 #include "ff_stdio.h"
 class File
 {
@@ -8,3 +11,5 @@ public:
     virtual ~File();
     FIL *getFilePtr(){return file;};
 };
+
+#endif //  PICO_FILE_H_

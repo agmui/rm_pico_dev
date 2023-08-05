@@ -1,4 +1,6 @@
 #include "SDCard.h"
+#include "pico/stdlib.h"
+// #include "../CliFunctions.cpp" //TODO remove code duplication?
 
 namespace debugtools
 {
@@ -9,7 +11,7 @@ namespace debugtools
     }
     bool SDCard::mount()
     {
-
+        printf("mount\n");
         FRESULT fr = f_mount(&pSD->fatfs, pSD->pcName, 1);
         if (FR_OK != fr)
         {
@@ -66,7 +68,7 @@ namespace debugtools
         return false;
     }
 
-    std::vector<std::string> SDCard::getFileList()
-    {
-    }
+    // std::vector<std::string> SDCard::getFileList()
+    // {
+    // }
 } // namespace debugtools

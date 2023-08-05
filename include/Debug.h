@@ -27,7 +27,7 @@ namespace debugtools
         // void widgetSetup();
         //========================
     public:
-        Debug(pico::Drivers *drivers) : drivers(drivers), cli(new CLI()) {}
+        Debug(pico::Drivers *drivers) : drivers(drivers), cli(new CLI(drivers)) {}
         ~Debug() = default;
         //==widget manager stuff==
         // void initUI();

@@ -55,8 +55,8 @@ namespace debugtools
     void Debug::runNextCommand(){
         if(cli->readUSB()==false) return;
         if(cli->findCommand()==false) return;
-        pico::Command* cmd = cli->getNextCommand();
-        cmd->passInDrivers(drivers);
+        pico::CLI_Cmd* cmd = cli->getNextCommand();
+        // cmd->passInDrivers(drivers);
         cmd->Execute();
     }
 

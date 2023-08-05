@@ -10,7 +10,7 @@
 //
 #include "f_util.h"
 #include "ff.h"
-#include "ff_stdio.h"
+// #include "ff_stdio.h" //defined in File.h
 #include "rtc.h"
 //
 #include "hw_config.h"

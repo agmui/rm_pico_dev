@@ -42,10 +42,6 @@ target_sources(${PROJECT_NAME}
         src/communications/RefSerialData.h
         src/communications/Remote.cpp
         src/communications/Uart.cpp
-        # src/Debug/UI_tests/singleButton.cpp
-        # src/Debug/UI_tests/terminalTest.cpp
-        # src/Debug/UI_tests/widgetTest.cpp
-        # src/Debug/Command.h
         src/Debug/SDCard/File.h
         src/Debug/SDCard/hw_config.c
         src/Debug/SDCard/SDCard.cpp
@@ -53,8 +49,13 @@ target_sources(${PROJECT_NAME}
         src/Debug/SDCard/TextFile.h
         src/Debug/SDCard/Yaml.cpp
         src/Debug/SDCard/Yaml.h
+        # src/Debug/UI_tests/singleButton.cpp
+        # src/Debug/UI_tests/terminalTest.cpp
+        # src/Debug/UI_tests/widgetTest.cpp
         src/Debug/CLI.cpp
         src/Debug/CLI.h
+        src/Debug/CliFunctions.cpp
+        src/Debug/CliFunctions.h
         src/Debug/Debug.cpp
         src/modm/deque_impl.hpp
         src/modm/deque.hpp

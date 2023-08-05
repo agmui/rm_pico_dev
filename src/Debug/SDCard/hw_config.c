@@ -25,6 +25,9 @@ socket, which SPI it is driven by, and how it is wired.
 
 */
 
+#ifndef PICO_HW_CONFIG_C_
+#define PICO_HW_CONFIG_C_
+
 #include <string.h>
 //
 #include "my_debug.h"
@@ -82,3 +85,4 @@ spi_t *spi_get_by_num(size_t num) {
 }
 
 /* [] END OF FILE */
+#endif //  PICO_HW_CONFIG_C_
