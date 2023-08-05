@@ -14,14 +14,14 @@ namespace pico
 {
   class Command
   {
-  private:
+  protected:
     Drivers *drivers;
 
   public:
     std::string name = "plzNameCmdLuL";
     // Command(Drivers *drivers);
     virtual ~Command(){};
-    void passInDrivers(Drivers *drivers){this->drivers = drivers;};
+    void passInDrivers(Drivers *drivers) { this->drivers = drivers; };
     virtual void Execute() const = 0;
   };
 }
@@ -35,7 +35,7 @@ namespace pico
     // TestCmd() = default;
     void Execute() const override
     {
-      std::cout << "ran test cmd" << std::endl;
+      std::cout << "ran test cmd uwu" << std::endl;
     }
   };
 
@@ -44,7 +44,12 @@ namespace pico
   public:
     void Execute() const override
     {
-      std::cout << "ls" << std::endl;
+      std::cout << "running ls" << std::endl;
+      // std::vector<std::string> list = drivers->sdCard.getFileList()
+      // for(auto f : list)
+      // {
+      //   std::cout << f << std::endl;
+      // }
     }
   };
 }

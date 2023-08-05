@@ -46,15 +46,16 @@ target_sources(${PROJECT_NAME}
         # src/Debug/UI_tests/terminalTest.cpp
         # src/Debug/UI_tests/widgetTest.cpp
         # src/Debug/Command.h
+        src/Debug/SDCard/File.h
+        src/Debug/SDCard/hw_config.c
+        src/Debug/SDCard/SDCard.cpp
+        src/Debug/SDCard/TextFile.cpp
+        src/Debug/SDCard/TextFile.h
+        src/Debug/SDCard/Yaml.cpp
+        src/Debug/SDCard/Yaml.h
         src/Debug/CLI.cpp
         src/Debug/CLI.h
         src/Debug/Debug.cpp
-        src/Debug/File.h
-        src/Debug/SDCard.cpp
-        src/Debug/TextFile.cpp
-        src/Debug/TextFile.h
-        src/Debug/Yaml.cpp
-        src/Debug/Yaml.h
         src/modm/deque_impl.hpp
         src/modm/deque.hpp
         src/drivers.cpp
@@ -121,6 +122,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
 # SD card
 add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
 target_link_libraries(${PROJECT_NAME} FatFs_SPI)
+target_include_directories(${PROJECT_NAME} PRIVATE lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI)
 
 
 # get every header file

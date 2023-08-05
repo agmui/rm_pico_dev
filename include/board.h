@@ -7,27 +7,33 @@
 #include <string>
 #include "Command.h"
 
-#define UART0_TX_PIN 0
-#define UART0_RX_PIN 1
+//TODO: rename from PIN to GPIO
+#define UART0_TX_PIN 0//gpio
+#define UART0_RX_PIN 1//gpio
 
-#define UART1_TX_PIN 0
-#define UART1_RX_PIN 1
+#define UART1_TX_PIN 0//gpio
+#define UART1_RX_PIN 1//gpio
 
-#define CAN0_RX_PIN 4
-#define CAN0_TX_PIN 5
+#define CAN0_RX_PIN 4//gpio
+#define CAN0_TX_PIN 5//gpio
 
-#define CAN1_RX_PIN 4
-#define CAN1_TX_PIN 5
+#define CAN1_RX_PIN 4//gpio
+#define CAN1_TX_PIN 5//gpio
+
+#define SD_CARD_MISO 12        // gpio
+#define SD_CARD_MOSI 15        // gpio
+#define SD_CARD_SCK 14         // gpio
+#define SD_CARD_SS 9           // gpio
+#define SD_CARD_CARD_DETECT 13 // gpio
 
 namespace Board
 {
     const pico::communication::serial::Uart::UartPort REMOTE_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart0;
     const pico::communication::serial::Uart::UartPort REF_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart1;
 
-    const std::unordered_map<std::string, pico::Command*> command_map = {
+    const std::unordered_map<std::string, pico::Command *> command_map = {
         {"test", new pico::TestCmd()},
-        {"ls", new pico::ls()}
-    };
+        {"ls", new pico::ls()}};
 
 } // namespace Board
 #endif // PICO_BOARD_H_
