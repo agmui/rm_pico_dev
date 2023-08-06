@@ -11,7 +11,6 @@ namespace debugtools
     }
     bool SDCard::mount()
     {
-        printf("mount\n");
         FRESULT fr = f_mount(&pSD->fatfs, pSD->pcName, 1);
         if (FR_OK != fr)
         {
@@ -23,7 +22,8 @@ namespace debugtools
         return true;
     }
 
-    bool SDCard::unmount(){
+    bool SDCard::unmount()
+    {
         FRESULT fr = f_unmount(pSD->pcName);
         if (FR_OK != fr)
         {
@@ -36,6 +36,7 @@ namespace debugtools
 
     File *SDCard::open(std::string filename)
     {
+        File *file = new File();
         const char *f_name = filename.c_str();
         FRESULT fr = f_open(file->getFilePtr(), f_name, FA_OPEN_APPEND | FA_WRITE);
         if (FR_OK != fr && FR_EXIST != fr)
@@ -46,12 +47,12 @@ namespace debugtools
         return file;
     }
 
-    bool SDCard::save(std::string filename)
-    {
-        return false;
-    }
+    // bool SDCard::save(std::string filename)
+    // {
+    //     return false;
+    // }
 
-    bool SDCard::close(std::string filename)
+    bool SDCard::close(File *file)
     {
         FRESULT fr = f_close(file->getFilePtr());
         if (FR_OK != fr)
@@ -61,7 +62,6 @@ namespace debugtools
         }
         return true;
     }
-
 
     bool SDCard::deleteFile(std::string filename)
     {

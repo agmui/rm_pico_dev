@@ -27,7 +27,7 @@ namespace debugtools
     private:
         pico::Drivers *drivers;
         sd_card_t *pSD;
-        File *file;
+        // File *file;
         // std::string files[];
 
     public:
@@ -37,10 +37,10 @@ namespace debugtools
         bool mount();
         bool unmount();
         File* open(std::string filename);
-        bool save(std::string filename);
-        bool close(std::string filename);
-        bool deleteFile(std::string filename);
-        std::vector<std::string> getFileList();
+        bool write(File* file);
+        bool close(File *file);
+        bool deleteFile(std::string filename); //TODO find  out how to delete File obj
+        // std::vector<std::string> getFileList();
     };
 } // namespace debugtools
 

@@ -7,6 +7,9 @@ project("rm_pico_dev"
     VERSION 0.9.1
     DESCRIPTION "Some library"
 )
+
+
+
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
@@ -42,8 +45,10 @@ target_sources(${PROJECT_NAME}
         src/communications/RefSerialData.h
         src/communications/Remote.cpp
         src/communications/Uart.cpp
+        src/Debug/SDCard/File.cpp
         src/Debug/SDCard/File.h
         src/Debug/SDCard/hw_config.c
+        src/Debug/SDCard/LogFile.h
         src/Debug/SDCard/SDCard.cpp
         src/Debug/SDCard/TextFile.cpp
         src/Debug/SDCard/TextFile.h
@@ -123,8 +128,44 @@ target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
 # SD card
 add_subdirectory(lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI build)
 target_link_libraries(${PROJECT_NAME} FatFs_SPI)
-target_include_directories(${PROJECT_NAME} PRIVATE lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI)
+target_include_directories(${PROJECT_NAME} PRIVATE lib/no-OS-FatFS-SD-SPI-RPi-Pico/FatFs_SPI) #TODO: add include dir
 
+#yaml-cpp
+#============================== got from: https://github.com/jbeder/yaml-cpp/issues/566#issuecomment-591924960
+# set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "disable yaml tests") # disables tests in yaml-cpp
+# set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "disable yaml tools")
+# set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "disable yaml contrib")
+# include(FetchContent)
+# FetchContent_Declare(
+# 		yaml-cpp
+# 		GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+# 		GIT_SHALLOW	ON
+# 		GIT_TAG yaml-cpp-0.7.0#6.3
+# 	)
+# FetchContent_GetProperties(yaml-cpp)
+# if(NOT yaml-cpp_POPULATED)
+# 	message(STATUS "Populating yaml-cpp...")
+# 	FetchContent_Populate(yaml-cpp)
+# 	# Add here options for yaml-cpp building
+# 	set(YAML_CPP_BUILD_TESTS OFF) #do it again idk
+#     set(YAML_CPP_BUILD_TOOLS OFF)
+#     set(YAML_CPP_BUILD_CONTRIB OFF)
+# 	add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
+# 	message(STATUS "Done.")
+# endif()
+
+# include_directories(BEFORE SYSTEM ${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR}/include)
+# target_link_libraries(${PROJECT_NAME} yaml-cpp)
+
+#---
+
+set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "disable yaml tests")
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "disable yaml tools")
+set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "disable yaml contrib")
+add_subdirectory(lib/yaml-cpp)
+target_link_libraries(${PROJECT_NAME} yaml-cpp)
+
+#============================== 
 
 # get every header file
 file(GLOB_RECURSE HEADER

@@ -17,7 +17,7 @@ namespace pico::communication::sensors::imu::mpu6050
 
     public:
         MPU6050(Drivers *drivers) : drivers(drivers) {}
-        ~MPU6050();
+        ~MPU6050() = default;
         void initialize();
         ImuState getImuState();
         void periodicIMUUpdate();

@@ -13,3 +13,7 @@
 [submodule "lib/pico-arduino-compat"]
 	path = lib/pico-arduino-compat
 	url = https://github.com/fhdm-dev/pico-arduino-compat.git
+[submodule "lib/yaml-cpp"]
+	path = lib/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+	shallow = true
