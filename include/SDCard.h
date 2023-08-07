@@ -29,12 +29,14 @@ namespace debugtools
         sd_card_t *pSD;
         // File *file;
         // std::string files[];
+        bool mounted = false;
 
     public:
         SDCard(pico::Drivers *drivers) : drivers(drivers) {}
         ~SDCard();
         void init();
         bool mount();
+        bool isMounted();
         bool unmount();
         File* open(std::string filename);
         bool write(File* file);

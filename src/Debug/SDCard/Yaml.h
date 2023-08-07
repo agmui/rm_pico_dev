@@ -1,7 +1,7 @@
 #ifndef PICO_YAML_H
 #define PICO_YAML_H
 
-#include "yaml-cpp/yaml.h"
+// #include "yaml-cpp/yaml.h"
 #include "File.h"
 
 namespace debugtools
@@ -11,12 +11,12 @@ class Yaml
 {
 private:
     File* file;
-    // YAML::Node node;
+    YAML::Node node;
 
 public:
     Yaml(File* file);// : node(YAML::Load(file->getRawText())){};
     ~Yaml();
-    // YAML::Node getYamlFile(){return node;};
+    YAML::Node getYamlFile(){return node;};
 };
 
 } // namespace debugtools

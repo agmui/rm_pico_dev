@@ -52,8 +52,8 @@ target_sources(${PROJECT_NAME}
         src/Debug/SDCard/SDCard.cpp
         src/Debug/SDCard/TextFile.cpp
         src/Debug/SDCard/TextFile.h
-        src/Debug/SDCard/Yaml.cpp
-        src/Debug/SDCard/Yaml.h
+        # src/Debug/SDCard/Yaml.cpp
+        # src/Debug/SDCard/Yaml.h
         # src/Debug/UI_tests/singleButton.cpp
         # src/Debug/UI_tests/terminalTest.cpp
         # src/Debug/UI_tests/widgetTest.cpp
@@ -162,10 +162,43 @@ target_include_directories(${PROJECT_NAME} PRIVATE lib/no-OS-FatFS-SD-SPI-RPi-Pi
 set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "disable yaml tests")
 set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "disable yaml tools")
 set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "disable yaml contrib")
-add_subdirectory(lib/yaml-cpp)
+# add_subdirectory(lib/yaml-cpp)
+# target_link_libraries(yaml-cpp pico_stdlib )
+# target_link_libraries(${PROJECT_NAME} yaml-cpp)
+
+#--
+
+set(YAML_CPP_BUILD_TESTS OFF) #do it again idk
+set(YAML_CPP_BUILD_TOOLS OFF)
+set(YAML_CPP_BUILD_CONTRIB OFF)
+include(FetchContent)
+FetchContent_Declare(yaml-cpp URL https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-0.7.0.tar.gz)
+FetchContent_MakeAvailable(yaml-cpp)
+
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
 
 #============================== 
+
+#tiny-json
+# add_library(tiny_json lib/tiny-json/tiny-json.c)
+# target_include_directories(tiny_json lib/tiny-json)
+# target_link_libraries(${PROJECT_NAME} tiny_json)
+
+#json-maker
+# add_library(json_maker STATIC lib/json-maker/src/json-maker.c)
+# target_link_libraries(json_maker pico_stdlib)
+# target_link_libraries(${PROJECT_NAME} json_maker)
+
+#json
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
+
+
+
+
 
 # get every header file
 file(GLOB_RECURSE HEADER

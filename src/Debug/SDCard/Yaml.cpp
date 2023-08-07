@@ -9,6 +9,6 @@ namespace debugtools
         // file->getRawText(buf);
         // node = YAML::Load(buf);
 
-        // node = YAML::Load("[1]");
+        node = YAML::Load("[1]");
     }
 } // namespace debugtools

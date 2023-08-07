@@ -1,5 +1,6 @@
 #include "SDCard.h"
 #include "pico/stdlib.h"
+#include <iostream>
 // #include "../CliFunctions.cpp" //TODO remove code duplication?
 
 namespace debugtools
@@ -38,7 +39,9 @@ namespace debugtools
     {
         File *file = new File();
         const char *f_name = filename.c_str();
+        std::cout << "f_open" << std::endl;
         FRESULT fr = f_open(file->getFilePtr(), f_name, FA_OPEN_APPEND | FA_WRITE);
+        std::cout << "after f_open" << std::endl;
         if (FR_OK != fr && FR_EXIST != fr)
         {
             panic("f_open(%s) error: %s (%d)\n", f_name, FRESULT_str(fr), fr);
