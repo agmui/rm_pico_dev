@@ -12,24 +12,24 @@ namespace debugtools
     private:
         std::string name;
         FIL fil;
-        FSIZE_t size;
+        FSIZE_t *size; // size is ptr so we dont have to update it
         bool isOpen;
 
         bool open(BYTE mode);
         bool close();
+        bool getRawText(char *buf);
 
     public:
-        File(std::string filename) : name(filename), size(getSize()){};
-        virtual ~File(){};
-        bool readFile();
-        virtual bool cast(char *buf) = 0;
-        bool getRawText(char *buf, size_t size);
+        File(std::string filename);
+        ~File(){};
+        bool read(char *buf);
+        // virtual bool cast(char *buf) = 0;
         bool overWrite(const char *buf);
         bool append(const char *buf);
-        FSIZE_t getSize() { return f_size(&fil); }; // returns num bytes
+        FSIZE_t getSize() { return *size; }; // returns num bytes
         bool fileIsOpen() { return isOpen; };
         FIL *getFilePtr() { return &fil; };
-        virtual bool save() = 0; // TODO:
+        // bool save(char *buf); // TODO:
     };
 } // namespace debugtools
 

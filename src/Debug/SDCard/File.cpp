@@ -8,10 +8,18 @@
 #include "rtc.h"
 namespace debugtools
 {
+    File::File(std::string filename) : name(filename), isOpen(false){
+        //test if it can open and close
+        if(!open(FA_READ)) return;
+        // set size to ptr so we dont have to keep updating it
+        size = &f_size(&fil); 
+        if(!close()) return;
+    };
+
     bool File::open(BYTE mode)
     {
         if (isOpen)
-            printf("WARNING: %s already open?\n", name);
+            printf("WARNING: \"%s\" already open?\n", name.c_str());
         isOpen = true;
 
         const char *const f_name = name.c_str();
@@ -24,35 +32,35 @@ namespace debugtools
         return true;
     }
 
-    bool File::readFile()
+    bool File::read(char *buf)
     {
         bool rez = true;
         // open file
         rez = open(FA_WRITE | FA_READ);
 
         // check if its too big
-        if (size > MAX_SIZE)
+        if (*size > MAX_SIZE)
         {
             printf("ERROR: file too big, truncating file\n");
-            size = MAX_SIZE;
+            *size = MAX_SIZE;
         }
         // read file
-        char buf[size + 1]; // adding the last char as a \0 may not be needed
-        rez = getRawText(buf, size);
-        buf[size] = '\0';
+        // char buf[size + 1]; // adding the last char as a \0 may not be needed
+        rez = getRawText(buf);
+        // buf[size] = '\0';
 
-        // cast to file type
-        rez = cast(buf);
+        // cast to file type(yaml, txt, log, etc..)
+        // rez = cast(buf);
 
         // close file
         rez = close();
         return rez;
     }
 
-    bool File::getRawText(char *buf, size_t size)
+    bool File::getRawText(char *buf)
     {
         uint bw; // bytes read
-        f_read(&fil, buf, size, &bw);
+        f_read(&fil, buf, *size, &bw);
         if (bw == 0) // if no bytes read
         {
             printf("ERROR: in getRawText(), maybe noting in file\n");
@@ -64,7 +72,7 @@ namespace debugtools
     bool File::close()
     {
         if (!isOpen)
-            printf("WARNING: %s not open?\n", name);
+            printf("WARNING: %s not open?\n", name.c_str());
         isOpen = false;
 
         FRESULT fr = f_close(getFilePtr());
@@ -93,5 +101,11 @@ namespace debugtools
         rez = close();
         return rez;
     }
+
+    //always re reads size cuz who knows if it changes
+    // FSIZE_t File::getSize()
+    // {
+    //     return size;
+    // }
 
 } // namespace debugtools

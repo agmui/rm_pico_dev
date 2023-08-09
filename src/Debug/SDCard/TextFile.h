@@ -3,20 +3,23 @@
 
 #include "File.h"
 #include <string>
+#include "fileInterface.h"
 
 namespace debugtools
 {
 
-    class TextFile : public File
+    class TextFile : public fileInterface
     {
     private:
+        char *fileArr; // idk fix
+
     public:
-        using File::File;
-        // TextFile(File *file) : file(file){};
-        ~TextFile();
-        bool cast(char *buf){return false;}; // TODO:
-        std::string getContents();
-        bool save(){return false;}; //TODO:
+        TextFile(File *file) : fileInterface(file) { read();};
+        ~TextFile() { delete fileArr; };
+        bool cast(char *buf);
+        char* getContents() { return fileArr; };//todo maybe make it return str idk
+        bool save();
+        size_t getSize(){return file->getSize();};
     };
 } // namespace debugtools
 #endif //  PICO_TEXTFILE_H_

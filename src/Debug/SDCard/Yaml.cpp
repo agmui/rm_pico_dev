@@ -16,7 +16,7 @@ namespace debugtools
     {
         YAML::Emitter out;
         out << node;
-        bool result = overWrite(out.c_str());
+        bool result = file->overWrite(out.c_str());
         return result;
     }
 } // namespace debugtools

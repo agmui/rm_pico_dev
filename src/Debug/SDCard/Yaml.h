@@ -6,18 +6,19 @@
 #include <yaml-cpp/yaml.h>
 #include "File.h"
 #include <string>
+#include "fileInterface.h"
 
 namespace debugtools
 {
 
-    class Yaml : public File
+    class Yaml : public fileInterface
     {
     private:
         YAML::Node node;
 
     public:
-        using File::File;
-        // Yaml(std::string filename); // : node(YAML::Load(file->getRawText())){};
+        // using File::File;
+        Yaml(File *file) : fileInterface(file) { read(); };
         ~Yaml(){};
         bool cast(char *buf);
         YAML::Node getNode() { return node; };
