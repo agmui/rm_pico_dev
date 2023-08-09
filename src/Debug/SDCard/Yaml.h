@@ -1,23 +1,28 @@
 #ifndef PICO_YAML_H
 #define PICO_YAML_H
 
-// #include "yaml-cpp/yaml.h"
+// todo move to includes folder
+
+#include <yaml-cpp/yaml.h>
 #include "File.h"
+#include <string>
 
 namespace debugtools
 {
-    
-class Yaml
-{
-private:
-    File* file;
-    YAML::Node node;
 
-public:
-    Yaml(File* file);// : node(YAML::Load(file->getRawText())){};
-    ~Yaml();
-    YAML::Node getYamlFile(){return node;};
-};
+    class Yaml : public File
+    {
+    private:
+        YAML::Node node;
+
+    public:
+        using File::File;
+        // Yaml(std::string filename); // : node(YAML::Load(file->getRawText())){};
+        ~Yaml() {};
+        bool cast(char *buf);
+        YAML::Node getNode() { return node; };
+        bool save();
+    };
 
 } // namespace debugtools
 #endif //  PICO_YAML_H

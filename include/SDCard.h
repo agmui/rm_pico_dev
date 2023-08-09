@@ -38,7 +38,7 @@ namespace debugtools
         bool mount();
         bool isMounted();
         bool unmount();
-        File* open(std::string filename);
+        // File* open(std::string filename);
         bool write(File* file);
         bool close(File *file);
         bool deleteFile(std::string filename); //TODO find  out how to delete File obj

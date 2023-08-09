@@ -52,8 +52,8 @@ target_sources(${PROJECT_NAME}
         src/Debug/SDCard/SDCard.cpp
         src/Debug/SDCard/TextFile.cpp
         src/Debug/SDCard/TextFile.h
-        # src/Debug/SDCard/Yaml.cpp
-        # src/Debug/SDCard/Yaml.h
+        src/Debug/SDCard/Yaml.cpp
+        src/Debug/SDCard/Yaml.h
         # src/Debug/UI_tests/singleButton.cpp
         # src/Debug/UI_tests/terminalTest.cpp
         # src/Debug/UI_tests/widgetTest.cpp
@@ -190,13 +190,10 @@ target_link_libraries(${PROJECT_NAME} yaml-cpp)
 # target_link_libraries(${PROJECT_NAME} json_maker)
 
 #json
+# FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+# FetchContent_MakeAvailable(json)
 
-FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
-FetchContent_MakeAvailable(json)
-
-target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
-
-
+# target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
 
 
 
