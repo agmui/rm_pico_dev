@@ -21,7 +21,6 @@
 // #include "rtc.h"
 #include "sd_card.h"
 
-
 //
 // extern "C"
 // {
@@ -69,6 +68,5 @@ static void run_del_node();
 static void run_start_logger();
 static void run_stop_logger();
 static void run_help();
-
 
 #endif //  PICO_CLIFUNCTIONS_H_

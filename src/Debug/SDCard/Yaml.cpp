@@ -9,10 +9,11 @@ namespace debugtools
     bool Yaml::cast(char *buf)
     {
         node = YAML::Load(buf);
-        return true;//todo
+        return true; // TODO:
     }
 
-    bool Yaml::save(){
+    bool Yaml::save()
+    {
         YAML::Emitter out;
         out << node;
         bool result = overWrite(out.c_str());

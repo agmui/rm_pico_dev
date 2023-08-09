@@ -8,8 +8,10 @@
 #include "rtc.h"
 namespace debugtools
 {
-    bool File::open(BYTE mode) {
-        if(isOpen) printf("WARNING: %s already open?\n", name);
+    bool File::open(BYTE mode)
+    {
+        if (isOpen)
+            printf("WARNING: %s already open?\n", name);
         isOpen = true;
 
         const char *const f_name = name.c_str();
@@ -22,43 +24,47 @@ namespace debugtools
         return true;
     }
 
-    bool File::readFile(){
+    bool File::readFile()
+    {
         bool rez = true;
-        //open file
+        // open file
         rez = open(FA_WRITE | FA_READ);
 
         // check if its too big
-        if(size > MAX_SIZE){
+        if (size > MAX_SIZE)
+        {
             printf("ERROR: file too big, truncating file\n");
             size = MAX_SIZE;
         }
-        //read file
-        char buf[size+1];// adding the last char as a \0 may not be needed
+        // read file
+        char buf[size + 1]; // adding the last char as a \0 may not be needed
         rez = getRawText(buf, size);
-        buf[size]='\0';
+        buf[size] = '\0';
 
-        //cast to file type
+        // cast to file type
         rez = cast(buf);
 
-        //close file
+        // close file
         rez = close();
         return rez;
     }
 
     bool File::getRawText(char *buf, size_t size)
     {
-        // f_gets(buf, size, &fil);//TODO fix second arg
-        uint bw;
+        uint bw; // bytes read
         f_read(&fil, buf, size, &bw);
-        if (bw == 0){
-            printf("error: reading file, eof\n"); // TODO make better
+        if (bw == 0) // if no bytes read
+        {
+            printf("ERROR: in getRawText(), maybe noting in file\n");
             return false;
         }
         return true;
     }
 
-    bool File::close(){
-        if(!isOpen) printf("WARNING: %s not open?\n", name);
+    bool File::close()
+    {
+        if (!isOpen)
+            printf("WARNING: %s not open?\n", name);
         isOpen = false;
 
         FRESULT fr = f_close(getFilePtr());
@@ -70,21 +76,22 @@ namespace debugtools
         return true;
     }
 
-    // todo add cap to write to size?
+    // TODO: add cap to write to size?
     bool File::overWrite(const char *buf)
     {
-        //erase everyting in file and open for writing
+        // erase everyting in file and open for writing
         bool rez = true;
         rez = open(FA_CREATE_ALWAYS | FA_WRITE | FA_READ);
 
-        //write to file
-        if (f_printf(&fil, buf) < 0){
-            printf("error: writing to file, disk full maybe"); // TODO make better
+        // write to file
+        if (f_printf(&fil, buf) < 0)
+        {
+            printf("ERROR: in overWrite(), disk maybe full ");
             rez = false;
         }
 
         rez = close();
-        return rez; 
+        return rez;
     }
 
 } // namespace debugtools

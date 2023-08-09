@@ -1,7 +1,7 @@
 #ifndef PICO_YAML_H
 #define PICO_YAML_H
 
-// todo move to includes folder
+// TODO: move to includes folder
 
 #include <yaml-cpp/yaml.h>
 #include "File.h"
@@ -18,7 +18,7 @@ namespace debugtools
     public:
         using File::File;
         // Yaml(std::string filename); // : node(YAML::Load(file->getRawText())){};
-        ~Yaml() {};
+        ~Yaml(){};
         bool cast(char *buf);
         YAML::Node getNode() { return node; };
         bool save();

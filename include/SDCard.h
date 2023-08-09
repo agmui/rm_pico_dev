@@ -35,9 +35,9 @@ namespace debugtools
         ~SDCard();
         void init();
         bool mountCard();
-        bool isMounted() {return pSD->mounted;};
+        bool isMounted() { return pSD->mounted; };
         bool unmountCard();
-        bool deleteFile(std::string filename); //TODO find  out how to delete File obj
+        bool deleteFile(std::string filename); // TODO:
         bool mkdir();
         bool ls();
         // std::vector<std::string> getFileList();

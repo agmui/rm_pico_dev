@@ -14,8 +14,9 @@ namespace debugtools
         using File::File;
         // TextFile(File *file) : file(file){};
         ~TextFile();
-        bool cast(char *buf){return false;}; // todo
+        bool cast(char *buf){return false;}; // TODO:
         std::string getContents();
+        bool save(){return false;}; //TODO:
     };
 } // namespace debugtools
 #endif //  PICO_TEXTFILE_H_

@@ -13,12 +13,10 @@ namespace debugtools
         std::string name;
         FIL fil;
         FSIZE_t size;
-        bool isOpen;//todo add logic and checks
+        bool isOpen;
 
         bool open(BYTE mode);
         bool close();
-        FIL *getFilePtr() { return &fil; };
-
 
     public:
         File(std::string filename) : name(filename), size(getSize()){};
@@ -29,8 +27,9 @@ namespace debugtools
         bool overWrite(const char *buf);
         bool append(const char *buf);
         FSIZE_t getSize() { return f_size(&fil); }; // returns num bytes
-        bool fileIsOpen() {return isOpen;};
-        virtual bool save();//todo
+        bool fileIsOpen() { return isOpen; };
+        FIL *getFilePtr() { return &fil; };
+        virtual bool save() = 0; // TODO:
     };
 } // namespace debugtools
 
