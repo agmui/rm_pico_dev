@@ -15,21 +15,22 @@ namespace debugtools
         FSIZE_t size;
         bool isOpen;//todo add logic and checks
 
-        bool open();
+        bool open(BYTE mode);
         bool close();
+        FIL *getFilePtr() { return &fil; };
 
 
     public:
         File(std::string filename) : name(filename), size(getSize()){};
         virtual ~File(){};
-        // void setName(std::string name) { this->name = name; };
-        FIL *getFilePtr() { return &fil; };
         bool readFile();
         virtual bool cast(char *buf) = 0;
         bool getRawText(char *buf, size_t size);
         bool overWrite(const char *buf);
-        bool writeAndClose();                       // todo better name
+        bool append(const char *buf);
         FSIZE_t getSize() { return f_size(&fil); }; // returns num bytes
+        bool fileIsOpen() {return isOpen;};
+        virtual bool save();//todo
     };
 } // namespace debugtools
 

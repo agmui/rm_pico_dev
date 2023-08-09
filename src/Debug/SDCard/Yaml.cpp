@@ -6,20 +6,16 @@
 
 namespace debugtools
 {
-    // Yaml::Yaml(std::string filename){
-    //     readFile();
-    // }
-    //todo check if name is updated
     bool Yaml::cast(char *buf)
     {
         node = YAML::Load(buf);
-        return false;//todo
+        return true;//todo
     }
 
     bool Yaml::save(){
         YAML::Emitter out;
         out << node;
-        bool result = overWrite(out.c_str()); // todo add cap to write to size?
+        bool result = overWrite(out.c_str());
         return result;
     }
 } // namespace debugtools

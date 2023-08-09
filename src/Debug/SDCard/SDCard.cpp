@@ -1,18 +1,22 @@
 #include "SDCard.h"
 #include "pico/stdlib.h"
 #include <iostream>
-// #include "../CliFunctions.cpp" //TODO remove code duplication?
+#include "../CliFunctions.cpp"
 
 namespace debugtools
 {
     void SDCard::init()
     {
-        time_init();//todo put this in drivers or something
+        time_init(); // todo put this in drivers or something
         pSD = sd_get_by_num(0);
     }
 
-    bool SDCard::mount()
+    bool SDCard::mountCard()
     {
+        if (pSD->mounted)
+            printf("WARNING: sdcard already mounted\n");
+
+        /*
         FRESULT fr = f_mount(&pSD->fatfs, pSD->pcName, 1);
         if (FR_OK != fr)
         {
@@ -22,10 +26,19 @@ namespace debugtools
             return false;
         }
         return true;
+        */
+
+        bool rez = mount(pSD->pcName);
+        if (!rez)
+            printf("Error in mountCard\n");
+        return rez;
     }
 
-    bool SDCard::unmount()
+    bool SDCard::unmountCard()
     {
+        if (!pSD->mounted)
+            printf("WARNING: sdcard not mounted\n");
+        /*pSD->mounted = false;
         FRESULT fr = f_unmount(pSD->pcName);
         if (FR_OK != fr)
         {
@@ -33,16 +46,11 @@ namespace debugtools
             printf("unmount err\n");
             return false;
         }
-        return true;
+        return true;*/
+        bool rez = unmount(pSD->pcName);
+        if(!rez)
+            printf("Error in unmountCard");
+        return rez;
     }
 
-
-    bool SDCard::deleteFile(std::string filename)
-    {
-        return false;
-    }
-
-    // std::vector<std::string> SDCard::getFileList()
-    // {
-    // }
 } // namespace debugtools

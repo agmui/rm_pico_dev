@@ -1,0 +1,33 @@
+  + Uart uart
+
+drivers -up-* MPU6050 : contains
+
+@startuml
+!theme reddress-darkred
+
+DjiMotor -up-* CanBus : contains
+
+DJISerial -up-* Uart
+RefSerial -up-* DJISerial
+RefSerial -right-|> RefSerialData
+' Remote -up-> Uart
+' MPU6050 --|> IMU
+
+Yaml-->File
+Text-->File
+SDCard-up->File
+
+drivers -up-* Uart : contains
+drivers -up-* MPU6050 : contains
+drivers -up-* RefSerial : contains
+drivers -up-* Remote : contains
+drivers -up-* Debug : contains
+drivers-up-*SDCard : contains
+
+
+
+CommunicationHandler -up->drivers
+RefereeSystem-up->drivers
+HardwareHandler-up->drivers
+HardwareHandler-up->DjiMotor
+@enduml

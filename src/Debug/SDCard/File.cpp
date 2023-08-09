@@ -8,20 +8,24 @@
 #include "rtc.h"
 namespace debugtools
 {
-    // todo maybe add args for type of read/write
-    bool File::open(){
+    bool File::open(BYTE mode) {
+        if(isOpen) printf("WARNING: %s already open?\n", name);
+        isOpen = true;
+
         const char *const f_name = name.c_str();
-        FRESULT fr = f_open(getFilePtr(), f_name, FA_WRITE | FA_READ); // "r"
+        FRESULT fr = f_open(getFilePtr(), f_name, mode); // "r"
         if (FR_OK != fr && FR_EXIST != fr)
         {
             panic("f_open(%s) error: %s (%d)\n", f_name, FRESULT_str(fr), fr);
-            return NULL;
+            return false;
         }
-        return false;//todo
+        return true;
     }
+
     bool File::readFile(){
+        bool rez = true;
         //open file
-        open();
+        rez = open(FA_WRITE | FA_READ);
 
         // check if its too big
         if(size > MAX_SIZE){
@@ -30,17 +34,33 @@ namespace debugtools
         }
         //read file
         char buf[size+1];// adding the last char as a \0 may not be needed
-        getRawText(buf, size);
+        rez = getRawText(buf, size);
         buf[size]='\0';
 
         //cast to file type
-        cast(buf);
+        rez = cast(buf);
 
         //close file
-        close();
-        return false;
+        rez = close();
+        return rez;
     }
+
+    bool File::getRawText(char *buf, size_t size)
+    {
+        // f_gets(buf, size, &fil);//TODO fix second arg
+        uint bw;
+        f_read(&fil, buf, size, &bw);
+        if (bw == 0){
+            printf("error: reading file, eof\n"); // TODO make better
+            return false;
+        }
+        return true;
+    }
+
     bool File::close(){
+        if(!isOpen) printf("WARNING: %s not open?\n", name);
+        isOpen = false;
+
         FRESULT fr = f_close(getFilePtr());
         if (FR_OK != fr)
         {
@@ -50,33 +70,21 @@ namespace debugtools
         return true;
     }
 
-    bool File::getRawText(char *buf, size_t size)
-    {
-        // f_gets(buf, size, &fil);//TODO fix second arg
-        uint bw;
-        f_read(&fil, buf, size, &bw);
-        if (bw == 0)
-            printf("error: reading file, eof\n"); // TODO make better
-        return false;//TODO
-    }
+    // todo add cap to write to size?
     bool File::overWrite(const char *buf)
     {
         //erase everyting in file and open for writing
-        FRESULT fr = f_open(&fil, name.c_str(), FA_CREATE_ALWAYS | FA_WRITE | FA_READ); // "w"
-        if (FR_OK != fr && FR_EXIST != fr)
-        {
-            // panic("f_open(%s) error: %s (%d)\n", name.c_str(), FRESULT_str(fr), fr);
-            printf("error: f_open\n");
-            return false;
-        }
+        bool rez = true;
+        rez = open(FA_CREATE_ALWAYS | FA_WRITE | FA_READ);
 
         //write to file
-        if (f_printf(&fil, buf) < 0)
-            printf("error: writing to file"); // TODO make better
+        if (f_printf(&fil, buf) < 0){
+            printf("error: writing to file, disk full maybe"); // TODO make better
+            rez = false;
+        }
 
-        //TODO close right after writing
-        close();
-        return false;                         // TODO
+        rez = close();
+        return rez; 
     }
 
 } // namespace debugtools

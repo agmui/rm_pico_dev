@@ -1,3 +1,4 @@
+//todo turn into class
 #include "CliFunctions.h"
 #include <ctype.h>
 #include <stdbool.h>
@@ -135,38 +136,47 @@ static void run_format() {
 static void run_mount() {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
-    FATFS *p_fs = sd_get_fs_by_name(arg1);
+    mount(arg1);
+}
+bool mount(const char *drive_number){
+    FATFS *p_fs = sd_get_fs_by_name(drive_number);
     if (!p_fs) {
-        printf("Unknown logical drive number: \"%s\"\n", arg1);
-        return;
+        printf("Unknown logical drive number: \"%s\"\n", drive_number);
+        return false;
     }
-    FRESULT fr = f_mount(p_fs, arg1, 1);
+    FRESULT fr = f_mount(p_fs, drive_number, 1);
     if (FR_OK != fr) {
         printf("f_mount error: %s (%d)\n", FRESULT_str(fr), fr);
-        return;
+        return false;
     }
-    sd_card_t *pSD = sd_get_by_name(arg1);
+    sd_card_t *pSD = sd_get_by_name(drive_number);
     myASSERT(pSD);
     pSD->mounted = true;
+    return true;
 }
+
 static void run_unmount() {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
-    FATFS *p_fs = sd_get_fs_by_name(arg1);
+    unmount(arg1);
+}
+bool unmount(const char *drive_number){
+    FATFS *p_fs = sd_get_fs_by_name(drive_number);
     if (!p_fs) {
-        printf("Unknown logical drive number: \"%s\"\n", arg1);
-        return;
+        printf("Unknown logical drive number: \"%s\"\n", drive_number);
+        return false;
     }
-    FRESULT fr = f_unmount(arg1);
+    FRESULT fr = f_unmount(drive_number);
     if (FR_OK != fr) {
         printf("f_unmount error: %s (%d)\n", FRESULT_str(fr), fr);
-        return;
+        return false;
     }
-    sd_card_t *pSD = sd_get_by_name(arg1);
+    sd_card_t *pSD = sd_get_by_name(drive_number);
     myASSERT(pSD);
     pSD->mounted = false;
     pSD->m_Status |= STA_NOINIT; // in case medium is removed
     printf("unmounted successfully\n");
+    return true;
 }
 static void run_chdrive() {
     const char *arg1 = strtok(NULL, " ");
@@ -202,8 +212,15 @@ static void run_cd() {
         printf("Missing argument\n");
         return;
     }
-    FRESULT fr = f_chdir(arg1);
-    if (FR_OK != fr) printf("f_mkfs error: %s (%d)\n", FRESULT_str(fr), fr);
+
+}
+bool cd(char *dir_name){
+    FRESULT fr = f_chdir(dir_name);
+    if (FR_OK != fr){
+        printf("f_mkfs error: %s (%d)\n", FRESULT_str(fr), fr);
+        return false;
+    }
+    return true;
 }
 static void run_mkdir() {
     char *arg1 = strtok(NULL, " ");
@@ -211,8 +228,14 @@ static void run_mkdir() {
         printf("Missing argument\n");
         return;
     }
-    FRESULT fr = f_mkdir(arg1);
-    if (FR_OK != fr) printf("f_mkfs error: %s (%d)\n", FRESULT_str(fr), fr);
+}
+bool mkdir(char *dir_name){
+    FRESULT fr = f_mkdir(dir_name);
+    if (FR_OK != fr){
+        printf("f_mkfs error: %s (%d)\n", FRESULT_str(fr), fr);
+        return false;
+    }
+    return true;
 }
 static void ls(const char *dir) {
     char cwdbuf[FF_LFN_BUF] = {0};
@@ -345,7 +368,7 @@ static void run_start_logger() {
     next_log_time = delayed_by_ms(get_absolute_time(), period);
 }
 static void run_stop_logger() { logger_enabled = false; }
-static void run_help();
+static void run_help();//todo
 // static void run_help() {
 //     for (size_t i = 0; i < count_of(cmds); ++i) {
 //         printf("%s\n\n", cmds[i].help);

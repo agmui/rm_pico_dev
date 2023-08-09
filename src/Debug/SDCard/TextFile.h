@@ -7,15 +7,15 @@
 namespace debugtools
 {
 
-class TextFile
-{
-private:
-    File *file;
-
-public:
-    TextFile(File *file) : file(file){};
-    ~TextFile();
-    std::string getContents();
-};
+    class TextFile : public File
+    {
+    private:
+    public:
+        using File::File;
+        // TextFile(File *file) : file(file){};
+        ~TextFile();
+        bool cast(char *buf){return false;}; // todo
+        std::string getContents();
+    };
 } // namespace debugtools
 #endif //  PICO_TEXTFILE_H_

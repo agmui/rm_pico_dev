@@ -48,11 +48,15 @@ static void run_setrtc();
 static void run_date();
 static void run_format();
 static void run_mount();
+static bool mount(const char *driver_number);
 static void run_unmount();
+static bool unmount(const char *drive_number);
 static void run_chdrive();
 static void run_getfree();
 static void run_cd();
+static bool cd(char *dir_name);
 static void run_mkdir();
+static bool mkdir(char *dir_name);
 static void ls(const char *dir);
 static void run_ls();
 static void run_cat();
@@ -65,7 +69,6 @@ static void run_del_node();
 static void run_start_logger();
 static void run_stop_logger();
 static void run_help();
-// static void run_help() ;
 
 
 #endif //  PICO_CLIFUNCTIONS_H_
