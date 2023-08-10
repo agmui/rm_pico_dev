@@ -35,6 +35,7 @@ namespace debugtools
         // void houseKeeping();
         //========================
         void changeSetting();
+        bool getSetting() {return false;};//todo
         void runNextCommand();
     };
 

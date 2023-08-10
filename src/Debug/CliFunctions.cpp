@@ -21,20 +21,13 @@
 #include "rtc.h"
 #include "sd_card.h"
 
-// extern "C" {
-//     // int lliot(size_t pnum);
-//     void ls(const char *dir);
-//     void simple();
-//     // void big_file_test(const char *const pathname, size_t size,
-//     //                         uint32_t seed);
-//     // void vCreateAndVerifyExampleFiles(const char *pcMountPath);
-//     // void vStdioWithCWDTest(const char *pcMountPath);
-//     bool process_logger();
-// }
+#include "Command.h"
 
-// static bool logger_enabled;
-// static const uint32_t period = 1000;
-// static absolute_time_t next_log_time;
+
+
+bool logger_enabled;
+const uint32_t period = 1000;
+absolute_time_t next_log_time;
 
 static sd_card_t *sd_get_by_name(const char *const name) {
     for (size_t i = 0; i < sd_get_num(); ++i)
@@ -49,7 +42,7 @@ static FATFS *sd_get_fs_by_name(const char *name) {
     return NULL;
 }
 
-static void run_setrtc() {
+void run_setrtc(pico::Drivers* drivers) {
     const char *dateStr = strtok(NULL, " ");
     if (!dateStr) {
         printf("Missing argument\n");
@@ -109,7 +102,7 @@ static void run_setrtc() {
 //     }
 //     lliot(pnum);
 // }
-static void run_date() {
+void run_date(pico::Drivers* drivers) {
     char buf[128] = {0};
     time_t epoch_secs = time(NULL);
     struct tm *ptm = localtime(&epoch_secs);
@@ -121,7 +114,7 @@ static void run_date() {
                     // 001 to 366).
     printf("Day of year: %s\n", buf);
 }
-static void run_format() {
+void run_format(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
     FATFS *p_fs = sd_get_fs_by_name(arg1);
@@ -133,7 +126,7 @@ static void run_format() {
     FRESULT fr = f_mkfs(arg1, 0, 0, FF_MAX_SS * 2);
     if (FR_OK != fr) printf("f_mkfs error: %s (%d)\n", FRESULT_str(fr), fr);
 }
-static void run_mount() {
+void run_mount(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
     mount(arg1);
@@ -155,7 +148,7 @@ bool mount(const char *drive_number){
     return true;
 }
 
-static void run_unmount() {
+void run_unmount(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
     unmount(arg1);
@@ -178,13 +171,13 @@ bool unmount(const char *drive_number){
     printf("unmounted successfully\n");
     return true;
 }
-static void run_chdrive() {
+void run_chdrive(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
     FRESULT fr = f_chdrive(arg1);
     if (FR_OK != fr) printf("f_mount error: %s (%d)\n", FRESULT_str(fr), fr);
 }
-static void run_getfree() {
+void run_getfree(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
     DWORD fre_clust, fre_sect, tot_sect;
@@ -206,7 +199,7 @@ static void run_getfree() {
     printf("%10lu KiB total drive space.\n%10lu KiB available.\n", tot_sect / 2,
            fre_sect / 2);
 }
-static void run_cd() {
+void run_cd(pico::Drivers* drivers) {
     char *arg1 = strtok(NULL, " ");
     if (!arg1) {
         printf("Missing argument\n");
@@ -222,7 +215,7 @@ bool cd(char *dir_name){
     }
     return true;
 }
-static void run_mkdir() {
+void run_mkdir(pico::Drivers* drivers) {
     char *arg1 = strtok(NULL, " ");
     if (!arg1) {
         printf("Missing argument\n");
@@ -237,7 +230,7 @@ bool mkdir(char *dir_name){
     }
     return true;
 }
-static void ls(const char *dir) {
+void ls(const char *dir) {
     char cwdbuf[FF_LFN_BUF] = {0};
     FRESULT fr; /* Return value */
     char const *p_dir;
@@ -284,12 +277,12 @@ static void ls(const char *dir) {
     }
     f_closedir(&dj);
 }
-static void run_ls() {
+void run_ls(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = "";
     ls(arg1);
 }
-static void run_cat() {
+void run_cat(pico::Drivers* drivers) {
     char *arg1 = strtok(NULL, " ");
     if (!arg1) {
         printf("Missing argument\n");
@@ -328,7 +321,7 @@ static void run_cat() {
 //     uint32_t seed = atoi(pcSeed);
 //     big_file_test(pcPathName, size, seed);
 // }
-static void del_node(const char *path) {
+void del_node(const char *path) {
     FILINFO fno;
     char buff[256];
     /* Directory to be deleted */
@@ -341,7 +334,7 @@ static void del_node(const char *path) {
         printf("%s error: %s (%d)\n", __func__, FRESULT_str(fr), fr);
     }
 }
-static void run_del_node() {
+void run_del_node(pico::Drivers* drivers) {
     char *arg1 = strtok(NULL, " ");
     if (!arg1) {
         printf("Missing argument\n");
@@ -363,12 +356,13 @@ static void run_del_node() {
 //         cRxedChar = getchar_timeout_us(0);
 //     } while (PICO_ERROR_TIMEOUT == cRxedChar);
 // }
-static void run_start_logger() {
+
+void run_start_logger(pico::Drivers* drivers) {
     logger_enabled = true;
     next_log_time = delayed_by_ms(get_absolute_time(), period);
 }
-static void run_stop_logger() { logger_enabled = false; }
-static void run_help();//todo
+void run_stop_logger(pico::Drivers* drivers) { logger_enabled = false; }
+void run_help(pico::Drivers* drivers);//todo
 // static void run_help() {
 //     for (size_t i = 0; i < count_of(cmds); ++i) {
 //         printf("%s\n\n", cmds[i].help);

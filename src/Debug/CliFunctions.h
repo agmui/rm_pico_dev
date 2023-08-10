@@ -14,11 +14,6 @@
 #include "ff.h" /* Obtains integer types */
 //
 #include "diskio.h" /* Declarations of disk functions */
-//
-// #include "f_util.h"
-// #include "hw_config.h"
-// #include "my_debug.h"
-// #include "rtc.h"
 #include "sd_card.h"
 
 //
@@ -34,39 +29,47 @@
 //     bool process_logger();
 // }
 
+
+namespace pico
+{
+    class Drivers;
+}
+
+
+
 bool process_logger();
-static bool logger_enabled;
-static const uint32_t period = 1000;
-static absolute_time_t next_log_time;
+// bool logger_enabled;
+// const uint32_t period = 1000;
+// absolute_time_t next_log_time;
 
 static sd_card_t *sd_get_by_name(const char *const name);
 static FATFS *sd_get_fs_by_name(const char *name);
 
-static void run_setrtc();
+void run_setrtc(pico::Drivers* drivers);
 // static void run_lliot();
-static void run_date();
-static void run_format();
-static void run_mount();
-static bool mount(const char *driver_number);
-static void run_unmount();
-static bool unmount(const char *drive_number);
-static void run_chdrive();
-static void run_getfree();
-static void run_cd();
-static bool cd(char *dir_name);
-static void run_mkdir();
-static bool mkdir(char *dir_name);
-static void ls(const char *dir);
-static void run_ls();
-static void run_cat();
+void run_date(pico::Drivers* drivers);
+void run_format(pico::Drivers* drivers);
+void run_mount(pico::Drivers* drivers);
+bool mount(const char *drive_number);
+void run_unmount(pico::Drivers* drivers);
+bool unmount(const char *drive_number);
+void run_chdrive(pico::Drivers* drivers);
+void run_getfree(pico::Drivers* drivers);
+void run_cd(pico::Drivers* drivers);
+bool cd(char *dir_name);
+void run_mkdir(pico::Drivers* drivers);
+bool mkdir(char *dir_name);
+void ls(const char *dir);
+void run_ls(pico::Drivers* drivers);
+void run_cat(pico::Drivers* drivers);
 // static void run_big_file_test() ;
-static void del_node(const char *path);
-static void run_del_node();
+void del_node(const char *path);
+void run_del_node(pico::Drivers* drivers);
 // static void run_cdef() ;
 // static void run_swcwdt() ;
 // static void run_loop_swcwdt() ;
-static void run_start_logger();
-static void run_stop_logger();
-static void run_help();
+void run_start_logger(pico::Drivers* drivers);
+void run_stop_logger(pico::Drivers* drivers);
+void run_help(pico::Drivers* drivers);
 
 #endif //  PICO_CLIFUNCTIONS_H_
