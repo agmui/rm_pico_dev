@@ -22,7 +22,7 @@
 #include "DJISerial.h"
 
 #include "../clock.h"
-#include "../endianness_wrappers.hpp"
+#include "../endianness_wrappers.hpp" //todo
 // #include "drivers.h"
 
 using namespace pico::arch;

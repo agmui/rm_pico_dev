@@ -43,3 +43,16 @@ problems it may cause:
 * increases dependencies and coupling in remote.cpp cuz it needs both pico lib and uart.cpp 
 
 TODO: use `absolute_time_diff_us(t, get_absolute_time()) > 0` for timers
+
+# Features:
+* CLI
+* read and write files to sd card
+* dji remote
+* dji motors
+* imu interface
+* motor interface
+* uart interface
+* debugger
+* printing to terminal
+
+

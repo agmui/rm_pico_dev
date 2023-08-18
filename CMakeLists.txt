@@ -17,6 +17,14 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+#==================== building docs====================s
+find_package(Doxygen)
+if(Doxygen_FOUND)
+    add_subdirectory(docs)
+else()
+    message(STATUS "Doxygen not found, not building docs")
+endif()
+
 
 # here you can see how instead of writing "rm_pico_dev"
 # we can just use the PROJECT_NAME variable
