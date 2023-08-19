@@ -13,3 +13,6 @@
 [submodule "lib/pico-arduino-compat"]
 	path = lib/pico-arduino-compat
 	url = https://github.com/fhdm-dev/pico-arduino-compat.git
+[submodule "picotool"]
+	path = picotool
+	url = https://github.com/raspberrypi/picotool.git
