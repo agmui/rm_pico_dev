@@ -52,7 +52,7 @@ problems it may cause:
 TODO: use `absolute_time_diff_us(t, get_absolute_time()) > 0` for timers
 
 ## Features
-
+TODO: add link to wiki
 * CLI
 * read and write files to sd card
 * dji remote

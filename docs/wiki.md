@@ -1,13 +1,15 @@
 # Examples
 
 ## setting up stuff
+
 Please go to [sample_rm_pico_app](https://github.com/agmui/sample_rm_pico_app#sample_rm_pico_app) readme
 
-### compiling example folder files TODO:
+### compiling example folder files TODO
 
 You can either compile the files in the examples folder or just copy the code form the guides and paste it in main.cpp
 
 ## hello world
+
 ```c++
 #include <iostream>
 #include "pico/stdlib.h" // the pico-sdk lib
@@ -40,6 +42,7 @@ int main(int argc, char const *argv[])
 ```
 
 ## remote demo
+
 ```c++
 #include <iostream>
 #include <drivers.h>
@@ -83,6 +86,7 @@ int main(int argc, char const *argv[])
 ```
 
 ## motor demo
+
 ```c++
 #include <iostream>
 #include <drivers.h>
@@ -155,22 +159,28 @@ int main(int argc, char const *argv[])
 ```
 
 ## multi motor demo
+
 TODO:
 
 ## Ref System
+
 TODO:
 [ref system manual](https://rm-static.djicdn.com/tem/71710/RoboMaster%20Referee%20System%20Serial%20Port%20Protocol%20Appendix%20V1.5%EF%BC%8820230717%EF%BC%89.pdf)
 
 ## IMU demo
+
 TODO:
 
 ## high lv uart demo
+
 TODO:
 
 ## debugging class demo
+
 TODO:
 
 ## basic cli
+
 ```c++
 #include <iostream>
 #include <drivers.h>
@@ -209,8 +219,8 @@ int main()
 
 ```
 
-
 ## adding cli cmd
+
 TODO:
 you cant "sniff" any var, cuz u have drivers, or just run some test
 
@@ -280,6 +290,7 @@ int main()
 ```
 
 ## cli sd card demo
+
 ```c++
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -325,11 +336,14 @@ int main()
 ```
 
 ## yaml/ any file reading stuff demo
+
 TODO:
 
 ## retro term demo
+
 currently only works well with Putty  
 screen, minicom, and serial terminal have mixed results
+
 ```c++
 #include <stdio.h>
 #include <iostream>
@@ -361,12 +375,13 @@ int main()
 }
 ```
 
-
 # low level libs
+
 From here on its recommend you don't mess with the pico-sdk because it may mess with the
 rm_pico_dev. So only use its functions if you need to.
 
-## basic input output 
+## basic input output
+
 ```c++
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -406,6 +421,7 @@ int main(){
 ```
 
 ## basic shell
+
 ```c++
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -451,9 +467,11 @@ int main()
 ```
 
 ## sd card
+
 from [simple_example](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico/tree/master/simple_example)  
 API for refrance: [no-OS-FatFS-SD-SPI-RPi-Pico](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico#using-the-application-programming-interface)  
 hw_config.c
+
 ```c++
 /* hw_config.c
 Copyright 2021 Carl John Kugler III
@@ -557,6 +575,7 @@ spi_t *spi_get_by_num(size_t num) {
 ```
 
 main.cpp
+
 ```c++
 #include <stdio.h>
 //
@@ -607,9 +626,11 @@ int main() {
 ```
 
 ## basic uart
+
 go to pico-example lib
 
 ## dbus demo
+
 uses irq and mostly taken from [basic uart](#basic-uart)  
 [dbus decoding guide](https://drive.google.com/file/d/1a5kaTsDvG89KQwy3fkLVkxKaQJfJCsnu/view)
 
@@ -739,9 +760,11 @@ int main()
 ```
 
 ## 2 way pico to pico canbus communication
+
 can2040 [API](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
 
 pico_transmit.cpp
+
 ```c++
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -831,6 +854,7 @@ int main()
 ```
 
 pico_receive.cpp
+
 ```c++
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -908,6 +932,7 @@ int main()
 ---
 
 # other examples in lib dir
+
 There are other examples in each submodule
 
 pico-sdk:  
@@ -920,7 +945,7 @@ sd card stuff:
 can2040 demo:  
 can2040 [API](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
 
-## pico-arduino-compat demo
+pico-arduino-compat demo
 [retroTerm](https://github.com/ncmreynolds/retroTerm/tree/main/examples/Example04_singleButton)
 [way to run arduino lib](https://github.com/fhdm-dev/pico-arduino-compat)
 
@@ -928,8 +953,53 @@ can2040 [API](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
 
 # geniral lib overview
 
-pin definition are in boar.h
-drivers has everything
+The library is a port from [taproot](https://github.com/uw-advanced-robotics/taproot) 
+to work on the pico.
+
+### drivers
+
+The drivers class is a [singleton](https://refactoring.guru/design-patterns/singleton)
+and has everything. If you need to do any library operation it is genrial through the
+drivers object.
+ex:
+```c++
+drivers->remote.isConnected();
+drivers->motorHandler.pollCanData(); 
+...
+```
+see the [examples](#examples) to learn more.
+
+### debug tools
+
+The Debug class and debugtools namespace in general is not from taproot. It is a collection of tools
+to make it easier to debug the pico.
+It has a [CLI](#basic-cli) and [SD card](#sd-card) class.
+
+#### CLI
+
+The CLI class can be conneted to 
+the serial monitor and have commands sent to it via the usb cable. This is so you can "peek"
+at any value or inter state such as the motor position or write simple tests to run on the pico. 
+To do this can just add your own commands with this [add demo](#adding-cli-cmd).
+
+#### SD card
+
+The SD card class is so we could store config files that we could just load.
+Or have a logger to record everything that happens. For example, say power is cut
+mid match or the pico crashes. We would have a log of what happened to debug.
+
+### pico-sdk
+
+You are allowed to use the pico-sdk library but it is advised not to because the rm_pico_dev library
+handles most of the states and ports in the sdk so messing with the sdk may have consequences.
+Only use the sdk if you absolutly must.
+
+### pin definitions
+
+All pin definition are in board.h and they are all the gpio pin number.
+
+### final notes
+
 LEARN WAT NAME SPACES R
 
 ---
@@ -939,17 +1009,42 @@ LEARN WAT NAME SPACES R
 ## CTests
 
 ## Wokwi Tests
+
 see Wokwi [section](#writing-wokwi-tests)
 
 ---
+
 # CMake intro TODO: add link to sample_rm_pico_app readme
 
-This guide is mainly for my robotics team. If you want to learn about cmake you can read this guide or go to any online guide
-
+This guide is mainly for my robotics team. If you want to learn about cmake you can read this guide or go to any online guide.
 
 ## vscode
 
-## more reading(if ur crazy enough):
+cmake tab:  
+![cmake tab](pics/cmake_tab.png)
+chooses what to build
+
+build all:  
+same as `f7` or `ctrl+shift+b`  
+![build all](pics/build_all.png)
+
+just build docs:  
+![build docs](pics/build_docs.png)
+the output will be in: `build/rm_pico_dev/docs/html/index.html`  
+to view double click the file and open in browser
+
+you can also just choose what other libs to build
+
+If you getting weird cmake erros sometimes just run:  
+![rebuild](pics/rebuild.png)
+
+choose kit:  
+![choose kit](pics/choose_kit.png)
+
+choose what to build:  
+![choose build](pics/choose_what_to_build.png)
+then click to build:  
+![builld](pics/to_build.png)
 
 ---
 
