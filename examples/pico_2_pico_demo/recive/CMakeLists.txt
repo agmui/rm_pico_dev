@@ -7,6 +7,10 @@ target_link_libraries(${PROJECT_NAME}
         hardware_pio
         )
 
+
+pico_enable_stdio_usb(${PROJECT_NAME} 1)
+pico_enable_stdio_uart(${PROJECT_NAME} 1)
+
 # create u2f/map/bin/hex file etc.
 pico_add_extra_outputs(${PROJECT_NAME})
 
