@@ -47,7 +47,7 @@ namespace debugtools
                               "  <path> Specifies the name of the directory to be created.\n"
                               "\te.g.: mkdir /dir1"}},
         {"del_node", {run_del_node, "del_node <path>:\n"
-                                    "  Remove directory and all of its contents.\n"
+                                    "  Remove directory and all of its contents. (kinda like rm -rf)\n"
                                     "  <path> Specifies the name of the directory to be deleted.\n"
                                     "\te.g.: del_node /dir1"}},
         {"ls", {run_ls, "ls:\n  List directory"}},

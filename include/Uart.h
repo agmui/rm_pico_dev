@@ -1,3 +1,5 @@
+//code from taproot
+
 #ifndef PICO_UART_H_
 #define PICO_UART_H_
 
@@ -12,15 +14,24 @@
 namespace pico::communication::serial
 {
 
+    /**
+     * Class that wraps modm's Uart implementation.
+     *
+     * Currently only wraps the uart ports that we are generating modm
+     * code for. If additional `UartPort`'s are added, they must be added
+     * to this wrapper class here.
+     */
     class Uart
     {
+    private:
+        uart_inst_t *uartPortToId[2] = {uart0, uart1}; /*!< to convert between UartPort and uart id*/
     public:
         enum UartPort
         {
-            Uart0,
-            Uart1
+            Uart0, /*!< uart0 */
+            Uart1  /*!< uart1 */
         };
-        uart_inst_t *uartPortToId[2] = {uart0, uart1};// to convert between UartPort and uart id
+
 
         enum Parity
         {
@@ -33,6 +44,14 @@ namespace pico::communication::serial
         Uart() = default;
         ~Uart() = default;
 
+        /**
+         * Initializes a particular Uart with the pins particular to the board.
+         *
+         * @note follow covention in the functin when adding a `UartPort`.
+         * @tparam port the particular port to initialize.
+         * @tparam baudrate desired baud rate in Hz.
+         * @tparam parity @see `Parity`.
+         */
         template <UartPort port, uint baudrate, Parity parity = Parity::Disabled>
         void init()
         {
@@ -43,6 +62,14 @@ namespace pico::communication::serial
                 init(uart1, baudrate, (uart_parity_t)parity);
         }
 
+        /**
+         * @brief 
+         * Initializes a particular Uart with the pins particular to the board.
+         * 
+         * @param id port the particular port to initialize.
+         * @param baudrate baudrate desired baud rate in Hz.
+         * @param parity parity @see `Parity`.
+         */
         void init(uart_inst_t *id, uint baudrate, uart_parity_t parity);
 
         /**
@@ -105,16 +132,23 @@ namespace pico::communication::serial
 
         void flushWriteBuffer(UartPort port);
 
-
         /**
          * returns the pico uart id
-         * 
-         * @return uart_inst_t 
+         *
+         * @return uart_inst_t
          */
         uart_inst_t *getUartID(UartPort port);
 
+        /**
+         * @brief 
+         * Checks if data is waiting in the RX FIFO
+         * 
+         * @param port 
+         * \return true if the RX FIFO is not empty, otherwise false.
+         * @return true 
+         * @return false 
+         */
         bool isReadable(UartPort port);
-
     };
 } // namespace pico::communication::serial
 
