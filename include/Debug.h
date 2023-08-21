@@ -14,6 +14,10 @@ namespace pico
 
 namespace debugtools
 {
+    /**
+     * @brief A debugging class that has active cli to talk to the pico or change settings on the fly
+     * 
+     */
     class Debug
     {
     private:
@@ -27,6 +31,13 @@ namespace debugtools
         // void widgetSetup();
         //========================
     public:
+        /**
+         * @brief Construct a new Debug object
+         * 
+         * @note creates CLI object
+         * 
+         * @param drivers 
+         */
         Debug(pico::Drivers *drivers) : drivers(drivers), cli(new CLI(drivers)) {}
         ~Debug() = default;
         //==widget manager stuff==
@@ -36,6 +47,11 @@ namespace debugtools
         //========================
         void changeSetting();
         bool getSetting() {return false;};//todo
+
+        /**
+         * @brief runs next command from the queue
+         * 
+         */
         void runNextCommand();
     };
 

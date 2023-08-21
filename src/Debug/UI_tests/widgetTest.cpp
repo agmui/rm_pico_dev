@@ -1,4 +1,5 @@
 #include <retroTerm.h>
+//taken from here: https://github.com/ncmreynolds/retroTerm/blob/main/examples/Example01_terminalCapabilityTests/Example01_terminalCapabilityTests.ino
 
 retroTerm terminal;
 

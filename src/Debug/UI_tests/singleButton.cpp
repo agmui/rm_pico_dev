@@ -1,4 +1,5 @@
 #include <retroTerm.h> //Include terminal library
+//taken from here: https://github.com/ncmreynolds/retroTerm/blob/main/examples/Example01_terminalCapabilityTests/Example01_terminalCapabilityTests.ino
 
 retroTerm terminal; //Create a terminal instance
 uint8_t buttonId = 0; //Record the button ID globally

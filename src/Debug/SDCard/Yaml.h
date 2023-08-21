@@ -44,6 +44,8 @@ namespace debugtools
         /**
          * @brief converts YAML::Node back into bytes to be saved 
          * 
+         * @note overwrites file
+         * 
          */
         bool save();
     };
