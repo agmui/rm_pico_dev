@@ -11,23 +11,23 @@ namespace debugtools
         pSD = sd_get_by_num(0);
     }
 
-    bool SDCard::mountCard()
+    bool SDCard::mount()
     {
         if (pSD->mounted)
             printf("WARNING: sdcard already mounted\n");
 
-        bool rez = mount(pSD->pcName);
+        bool rez = mountCard(pSD->pcName);
         if (!rez)
             printf("Error in mountCard()\n");
         return rez;
     }
 
-    bool SDCard::unmountCard()
+    bool SDCard::unmount()
     {
         if (!pSD->mounted)
             printf("WARNING: sdcard not mounted\n");
 
-        bool rez = unmount(pSD->pcName);
+        bool rez = unmountCard(pSD->pcName);
         if (!rez)
             printf("Error in unmountCard()");
         return rez;

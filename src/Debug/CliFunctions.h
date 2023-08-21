@@ -89,7 +89,7 @@ void run_mount(pico::Drivers* drivers);
  * 
  * @param drivers 
  */
-bool mount(const char *drive_number);
+bool mountCard(const char *drive_number);
 
 /**
  * @brief cli function to unmount the SD card
@@ -106,7 +106,7 @@ void run_unmount(pico::Drivers* drivers);
  * @param drive_number 
  * @return if the unmount was successful
  */
-bool unmount(const char *drive_number);
+bool unmountCard(const char *drive_number);
 
 
 /**

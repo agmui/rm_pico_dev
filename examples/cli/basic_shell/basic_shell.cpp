@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/uart.h"
+// #include "pico/stdio.h"
+#include "pico/stdio_usb.h"
 
 int main()
 {

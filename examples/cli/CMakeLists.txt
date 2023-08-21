@@ -1,0 +1,5 @@
+add_subdirectory(add_cmd)
+add_subdirectory(basic_cmd)
+add_subdirectory(basic_shell)
+add_subdirectory(input_and_output)
+# add_subdirectory(retroterm)

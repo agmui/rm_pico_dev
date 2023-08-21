@@ -129,9 +129,9 @@ void run_format(pico::Drivers* drivers) {
 void run_mount(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
-    mount(arg1);
+    mountCard(arg1);
 }
-bool mount(const char *drive_number){
+bool mountCard(const char *drive_number){
     FATFS *p_fs = sd_get_fs_by_name(drive_number);
     if (!p_fs) {
         printf("Unknown logical drive number: \"%s\"\n", drive_number);
@@ -151,9 +151,9 @@ bool mount(const char *drive_number){
 void run_unmount(pico::Drivers* drivers) {
     const char *arg1 = strtok(NULL, " ");
     if (!arg1) arg1 = sd_get_by_num(0)->pcName;
-    unmount(arg1);
+    unmountCard(arg1);
 }
-bool unmount(const char *drive_number){
+bool unmountCard(const char *drive_number){
     FATFS *p_fs = sd_get_fs_by_name(drive_number);
     if (!p_fs) {
         printf("Unknown logical drive number: \"%s\"\n", drive_number);

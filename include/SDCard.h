@@ -59,7 +59,7 @@ namespace debugtools
          *
          * @return true if mount was successful false if not
          */
-        bool mountCard();
+        bool mount();
 
         /**
          * @brief checks if SD card is mounted
@@ -74,7 +74,7 @@ namespace debugtools
          * 
          * @return if unmounting was successful
          */
-        bool unmountCard();
+        bool unmount();
 
         /**
          * @brief 

@@ -1,0 +1,2 @@
+add_subdirectory(dbus)
+add_subdirectory(taproot_remote)

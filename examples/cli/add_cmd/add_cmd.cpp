@@ -1,9 +1,10 @@
 
 #include <stdio.h>
 #include "pico/stdlib.h"
-#include <drivers.h>
+// #include <drivers.h>
 #include <string>
 
+/*
 // function to run when pilk is called
 void pilk(pico::Drivers *drivers) 
 {
@@ -20,7 +21,7 @@ void pilk(pico::Drivers *drivers)
 
     // drivers is passed in so you can print out whatever you want
     printf("setting: %d\n", drivers->debug.getSetting());
-}
+}*/
 int main()
 {
     stdio_init_all();
@@ -34,7 +35,13 @@ int main()
             break;
     }
     puts("");// basically printf()
-
+    while (1)
+    {
+        printf("hi");
+        tight_loop_contents();
+    }
+    
+/*
     pico::Drivers *drivers = new pico::Drivers();
     // setting up new cmd
     debugtools::cmd_def_t cmd = {pilk, 
@@ -60,4 +67,5 @@ int main()
         // type in pilk to see output
         drivers->debug.runNextCommand();
     }
+*/
 }
