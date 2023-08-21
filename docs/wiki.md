@@ -85,6 +85,10 @@ int main(int argc, char const *argv[])
 
 ```
 
+## Servos?
+
+TODO:
+
 ## motor demo
 
 ```c++
@@ -931,42 +935,48 @@ int main()
 
 ---
 
-# other examples in lib dir
+# Other Examples in Lib Dir
 
 There are other examples in each submodule
 
 pico-sdk:  
-[pico-examples](https://github.com/raspberrypi/pico-examples)
+
+* [pico-examples](https://github.com/raspberrypi/pico-examples)
 
 sd card stuff:  
-[simple_example](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico/tree/master/simple_example)  
-[example](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico/tree/master/example)
 
-can2040 demo:  
-can2040 [API](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
+* [simple_example](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico/tree/master/simple_example)  
+* [example](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico/tree/master/example)
+
+can2040:  
+
+* [API](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
 
 pico-arduino-compat demo
-[retroTerm](https://github.com/ncmreynolds/retroTerm/tree/main/examples/Example04_singleButton)
-[way to run arduino lib](https://github.com/fhdm-dev/pico-arduino-compat)
+
+* [retroTerm](https://github.com/ncmreynolds/retroTerm/tree/main/examples/Example04_singleButton)
+* [way to run arduino lib](https://github.com/fhdm-dev/pico-arduino-compat)
 
 ---
 
-# geniral lib overview
+# General lib overview
 
-The library is a port from [taproot](https://github.com/uw-advanced-robotics/taproot) 
+The library is a port from [taproot](https://github.com/uw-advanced-robotics/taproot)
 to work on the pico.
 
 ### drivers
 
 The drivers class is a [singleton](https://refactoring.guru/design-patterns/singleton)
-and has everything. If you need to do any library operation it is genrial through the
+and has everything. If you need to do any library operation it is General through the
 drivers object.
 ex:
+
 ```c++
 drivers->remote.isConnected();
 drivers->motorHandler.pollCanData(); 
 ...
 ```
+
 see the [examples](#examples) to learn more.
 
 ### debug tools
@@ -977,9 +987,9 @@ It has a [CLI](#basic-cli) and [SD card](#sd-card) class.
 
 #### CLI
 
-The CLI class can be conneted to 
+The CLI class can be conneted to
 the serial monitor and have commands sent to it via the usb cable. This is so you can "peek"
-at any value or inter state such as the motor position or write simple tests to run on the pico. 
+at any value or inter state such as the motor position or write simple tests to run on the pico.
 To do this can just add your own commands with this [add demo](#adding-cli-cmd).
 
 #### SD card
@@ -1021,7 +1031,7 @@ This guide is mainly for my robotics team. If you want to learn about cmake you 
 ## vscode
 
 cmake tab:  
-![cmake tab](pics/cmake_tab.png)
+![cmake tab](pics/cmake_tab.png)  
 chooses what to build
 
 build all:  
@@ -1029,7 +1039,7 @@ same as `f7` or `ctrl+shift+b`
 ![build all](pics/build_all.png)
 
 just build docs:  
-![build docs](pics/build_docs.png)
+![build docs](pics/build_docs.png)  
 the output will be in: `build/rm_pico_dev/docs/html/index.html`  
 to view double click the file and open in browser
 
@@ -1042,7 +1052,7 @@ choose kit:
 ![choose kit](pics/choose_kit.png)
 
 choose what to build:  
-![choose build](pics/choose_what_to_build.png)
+![choose build](pics/choose_what_to_build.png)  
 then click to build:  
 ![builld](pics/to_build.png)
 

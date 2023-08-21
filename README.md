@@ -36,6 +36,8 @@ use any arduino lib with pico-sdk: [pico-arduino-compat](https://github.com/fhdm
 canbus: [can2040](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
 [can node i think? idk](https://www.amazon.com/dp/B00KM6XMXO?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 
+#### PLZ I BEG U PLZ SKIM OVER THE WIKI IT WILL SAVE U SO MUCH TIME
+
 ## NOTE:
 using the pico sdk along with this lib may mess with things so do it at your own risk
 
@@ -82,7 +84,7 @@ and uses things like modm properly
 * decided if file operations should return string or char*
 * move Logfile.h, Yaml.h, and TextFile.h to includes folder
 * get retroTerm.h to work
-* decide if arduino libs going to be used or included i.e. 
-`pico-arduino-compat`
+* decide if arduino libs going to be used or included i.e. `pico-arduino-compat`
 * general TODO statements everywhere
 * fix CliFunctions.cpp to be a class
+* if doing a re port of taproot also port over the wiki
