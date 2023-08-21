@@ -12,6 +12,7 @@
 
 /// \tag::uart_advanced[]
 
+// uart settings
 #define UART_ID uart0
 #define BAUD_RATE 100000
 #define DATA_BITS 8
@@ -28,6 +29,8 @@ static uint8_t data[18]{0};
 static uint8_t save_data[18]{0};
 uint32_t last_read = 0;
 
+// parse the data just read
+// mainly used for the Remote class in Remote.cpp, parseBuffer() function
 void parse_data()
 {
     printf("\nBREAK: ");
@@ -44,19 +47,25 @@ void parse_data()
 // RX interrupt handler
 void on_uart_rx()
 {
+    // if last byte was too long
     if (time_us_32() - last_read > 300)
     {
         // std::cout << time_us_32() - last_read << std::endl;
-        chars_rxed = 0;
+        chars_rxed = 0;// reset
     }
+    // while stuff is in rx fifo
     while (uart_is_readable(UART_ID))
     {
+        // read one byte(blocking)
+        //API: https://www.raspberrypi.com/documentation/pico-sdk/hardware.html#rpipbf59a4c19126a5547408
         uint8_t ch = uart_getc(UART_ID);
-        last_read = time_us_32();
+        last_read = time_us_32(); // record when byte was read
         // printf("ch: %#x\n", ch);
-        data[chars_rxed] = ch;
+        data[chars_rxed] = ch; // add to buffer
         chars_rxed++;
 
+        // if read all 18 bytes parse data
+        //[dbus decoding guide](https://drive.google.com/file/d/1a5kaTsDvG89KQwy3fkLVkxKaQJfJCsnu/view)
         if (chars_rxed >= 18)
             parse_data();
 

@@ -23,29 +23,36 @@ You may also need to change the version of retroTerm to the latest version
 
 ---
 
-To read printout:  
-`screen /dev/ttyACM0 9600`
-
 ### to upload:  
-first find what port: `sudo dmesg | tail`
-then to upload:  
-`sudo mount /dev/sda1 /media/agmui/ ; sudo cp rm_pico_dev.uf2 /media/agmui/ ; sudo umount /media/agmui/`
+read the [sample_rm_pico_app](https://github.com/agmui/sample_rm_pico_app#uploading) uploading section
 
-# NOTE:
+
+### libs used
+sdk: [pico-sdk](https://github.com/raspberrypi/pico-sdk)  
+sd card stuff:[no-OS-FatFS-SD-SPI-RPi-Pico](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico)
+[sd card reader](https://www.amazon.com/dp/B07YSD5VTL?psc=1&ref=ppx_yo2ov_dt_b_product_details)  
+
+use any arduino lib with pico-sdk: [pico-arduino-compat](https://github.com/fhdm-dev/pico-arduino-compat)  
+canbus: [can2040](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
+[can node i think? idk](https://www.amazon.com/dp/B00KM6XMXO?psc=1&ref=ppx_yo2ov_dt_b_product_details)
+
+## NOTE:
 using the pico sdk along with this lib may mess with things so do it at your own risk
 
-# design thoughts
+## design thoughts
 using the pico lib in code increases coupling
 
 ex: using the uart getc function in remote.cpp
 problems it may cause:
+
 * If I expose the pico lib in the app other people trying to use the pico lib and my lib at the same time will have unknown conflicts
 * I have to keep track of both the uartID and Uart::UartPort
 * increases dependencies and coupling in remote.cpp cuz it needs both pico lib and uart.cpp 
 
 TODO: use `absolute_time_diff_us(t, get_absolute_time()) > 0` for timers
 
-# Features:
+## Features
+
 * CLI
 * read and write files to sd card
 * dji remote
@@ -57,3 +64,25 @@ TODO: use `absolute_time_diff_us(t, get_absolute_time()) > 0` for timers
 * printing to terminal
 
 
+## TODO:
+* some weirdness in DjiMotor.cpp initialize()
+* in Motorhandler.cpp addMotorToManager() checking bounds
+* RefSerrialData.h MODM_FLAGS8()
+* commandMapper in drivers Remote.cpp
+
+* write datalogger
+* decided on 1 or 2 canbus
+* do a proper port of taproot so the file structure is not cringe
+and uses things like modm properly
+* get log files to work and fix the read flages in File.cpp
+(some weird edge cases gets missed when opining in READ mode or something)
+* proply refactor and write an adapter for SD card class mainly
+`hw_config.c` and the pSD object
+* in SDCard.cpp move time_init() to drivers.h
+* decided if file operations should return string or char*
+* move Logfile.h, Yaml.h, and TextFile.h to includes folder
+* get retroTerm.h to work
+* decide if arduino libs going to be used or included i.e. 
+`pico-arduino-compat`
+* general TODO statements everywhere
+* fix CliFunctions.cpp to be a class

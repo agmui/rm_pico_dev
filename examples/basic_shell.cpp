@@ -7,10 +7,11 @@ int main()
     stdio_init_all();
     while (!stdio_usb_connected())
         ; // wait until USB connection
-    char data[10];
+    char data[10]; // reading cmd buffer
     int chars_rxed = 0;
     while (1)
     {
+        // emulates stuff happing
         printf("doing stuff");
         sleep_ms(200);
         printf(".");
@@ -22,15 +23,19 @@ int main()
         int ch = PICO_ERROR_TIMEOUT;
         do
         {
-            ch = getchar_timeout_us(0);
+            // waits and checks for char
+            // if no char continue
+            ch = getchar_timeout_us(0);// returns PICO_ERROR_TIMEOUT if no char
+
+            // saves char to buffer
             data[chars_rxed] = (char)ch;
             chars_rxed++;
-        } while (ch != PICO_ERROR_TIMEOUT);
-        data[chars_rxed-1] = '\0';
-        if (chars_rxed>1)
-            printf("%s\n", data);
-        chars_rxed = 0;
+        } while (ch != PICO_ERROR_TIMEOUT);// loop till char no more chars to read 
 
+        data[chars_rxed - 1] = '\0';// add null char
+        if (chars_rxed > 1)
+            printf("%s\n", data);// print cmd
+        chars_rxed = 0; //reset
     }
     return 0;
 }

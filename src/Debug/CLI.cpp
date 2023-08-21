@@ -60,7 +60,7 @@ namespace debugtools
         //                       "  Shows this command help."}}
     };
 
-    // Todo: use irq
+    // Todo: use irq bc it is blocking
     bool CLI::readUSB()
     {
         // std::cout << "reading" << std::endl;

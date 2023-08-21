@@ -13,6 +13,7 @@ int main(int argc, char const *argv[])
     gpio_init(25);
     gpio_set_dir(25, GPIO_OUT);
 
+    // init remote
     drivers->remote.initialize();
     while (1)
     {
@@ -26,12 +27,12 @@ int main(int argc, char const *argv[])
         printf("LED switched off!\n");
 
         // ====
-        std::cout << "." << std::endl;
+        std::cout << "." << std::endl; // waiting for value
         drivers->remote.read(); // Reading the remote before we check if it is connected yet or not.
         if (drivers->remote.isConnected())
         {
+            // print out value
             std::cout << "remote: " << drivers->remote.getChannel(pico::communication::serial::Remote::Channel::LEFT_HORIZONTAL) << std::endl;
         }
-        tight_loop_contents();
     }
 }

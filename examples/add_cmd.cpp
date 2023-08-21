@@ -2,11 +2,10 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include <drivers.h>
-
-
 #include <string>
 
-void pilk(pico::Drivers *drivers)
+// function to run when pilk is called
+void pilk(pico::Drivers *drivers) 
 {
     char pilk[] =
         "$$$$$$$\\ $$$$$$\\ $$\\       $$\\   $$\\ \n"
@@ -17,7 +16,9 @@ void pilk(pico::Drivers *drivers)
         "$$ |       $$ |  $$ |      $$ |\\$$\\  \n"
         "$$ |     $$$$$$\\ $$$$$$$$\\ $$ | \\$$\\ \n"
         "\\__|     \\______|\\________|\\__|  \\__|\n\n";
-    puts(pilk);
+    puts(pilk);// basically printf()
+
+    // drivers is passed in so you can print out whatever you want
     printf("setting: %d\n", drivers->debug.getSetting());
 }
 int main()
@@ -32,19 +33,22 @@ int main()
         if (getchar_timeout_us(100) != -1)
             break;
     }
-    puts("");
+    puts("");// basically printf()
 
     pico::Drivers *drivers = new pico::Drivers();
-    // adding new cmd
-    debugtools::cmd_def_t cmd = {pilk, // sample command
+    // setting up new cmd
+    debugtools::cmd_def_t cmd = {pilk, 
                                  "pilk\n"
                                  "this is a sample cmd"};
     // debugtools::CLI::command_map.insert(std::make_pair("pilk", cmd));
+
+    // adding new cmd to command_map
     debugtools::CLI::command_map["pilk"] = cmd;
 
 
     while (1)
     {
+        // emulate stuff happening
         printf("doing stuff");
         sleep_ms(200);
         printf(".");
@@ -53,6 +57,7 @@ int main()
         sleep_ms(200);
         printf(".\n");
 
+        // type in pilk to see output
         drivers->debug.runNextCommand();
     }
 }

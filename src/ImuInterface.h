@@ -27,7 +27,7 @@ public:
         IMU_CALIBRATED,
     };
 
-    virtual inline const char *getName() /*const*/ = 0; //TODO: find out why there is a const
+    virtual inline const char *getName() /*const*/ = 0;
 
     /**
      * Returns the linear acceleration in the x direction, in

@@ -51,7 +51,7 @@ namespace debugtools
         terminal.houseKeeping();
     }*/
 
-    //TODO shuld be private
+    //TODO should be private
     void Debug::runNextCommand(){
         if(cli->readUSB()==false) return;
         if(cli->findCommand()==false) return;

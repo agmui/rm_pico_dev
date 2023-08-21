@@ -25,24 +25,10 @@ int main()
 
     while (1)
     {
-        printf("doing stuff");
-        sleep_ms(200);
-        printf(".");
-        sleep_ms(200);
-        printf(".");
-        sleep_ms(200);
-        printf(".\n");
-
-
-        // Turn On LED
-        gpio_put(25, 1); // Set pin 25 to high
-        sleep_ms(250);
-        // printf("LED switched on!\n");
-        // Turn Off LED
-        gpio_put(25, 0); // Set pin 25 to high.
-        sleep_ms(250);
-        // printf("LED switched off!\n");
-
+        // waits like 1ms for cmd to come in
+        // if nothing it continues
         drivers->debug.runNextCommand();
+        // prevent the pico from turning into a 1 use smoke machine
+        tight_loop_contents(); 
     }
 }
