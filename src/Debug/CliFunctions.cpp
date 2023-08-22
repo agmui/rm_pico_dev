@@ -22,6 +22,7 @@
 #include "sd_card.h"
 
 #include "Command.h"
+#include "CLI.h"
 
 
 
@@ -205,6 +206,7 @@ void run_cd(pico::Drivers* drivers) {
         printf("Missing argument\n");
         return;
     }
+    cd(arg1);
 
 }
 bool cd(char *dir_name){
@@ -221,6 +223,7 @@ void run_mkdir(pico::Drivers* drivers) {
         printf("Missing argument\n");
         return;
     }
+    mkdir(arg1);
 }
 bool mkdir(char *dir_name){
     FRESULT fr = f_mkdir(dir_name);
@@ -362,9 +365,9 @@ void run_start_logger(pico::Drivers* drivers) {
     next_log_time = delayed_by_ms(get_absolute_time(), period);
 }
 void run_stop_logger(pico::Drivers* drivers) { logger_enabled = false; }
-void run_help(pico::Drivers* drivers);//todo
-// static void run_help() {
-//     for (size_t i = 0; i < count_of(cmds); ++i) {
-//         printf("%s\n\n", cmds[i].help);
-//     }
-// }
+// void run_help(pico::Drivers* drivers);//todo
+void run_help(pico::Drivers* drivers) {
+    for(auto cmd : debugtools::CLI::command_map){
+        printf("%s\n\n", cmd.second.help);
+    }
+}

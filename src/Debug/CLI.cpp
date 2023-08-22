@@ -56,8 +56,8 @@ namespace debugtools
                                             "  Start Data Log Demo"}},
         {"stop_logger", {run_stop_logger, "stop_logger:\n"
                                           "  Stop Data Log Demo"}},
-        //   {"help", {run_help, "help:\n"
-        //                       "  Shows this command help."}}
+          {"help", {run_help, "help:\n"
+                              "  Shows this command help."}}
     };
 
     // Todo: use irq bc it is blocking

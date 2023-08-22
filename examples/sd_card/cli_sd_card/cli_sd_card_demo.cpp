@@ -28,13 +28,13 @@ int main()
     {
 
         // emulates stuff running on pico
-        printf("doing stuff");
-        sleep_ms(200);
-        printf(".");
-        sleep_ms(200);
-        printf(".");
-        sleep_ms(200);
-        printf(".\n");
+        // printf("doing stuff");
+        // sleep_ms(200);
+        // printf(".");
+        // sleep_ms(200);
+        // printf(".");
+        // sleep_ms(200);
+        // printf(".\n");
 
         //waits for cmd. If no cmd goes on
         drivers->debug.runNextCommand();

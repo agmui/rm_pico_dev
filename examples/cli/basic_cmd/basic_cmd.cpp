@@ -22,6 +22,8 @@ int main()
     gpio_init(25);
     gpio_set_dir(25, GPIO_OUT);
 
+    printf("type help for list of cmds\n");
+
 
     while (1)
     {
