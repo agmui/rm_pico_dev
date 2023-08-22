@@ -27,7 +27,7 @@ int main() {
     FRESULT fr = f_mount(&pSD->fatfs, pSD->pcName, 1);
     if (FR_OK != fr) panic("f_mount error: %s (%d)\n", FRESULT_str(fr), fr);
     FIL fil;
-    const char* const filename = "filename.yaml";
+    const char* const filename = "test.yaml";
     fr = f_open(&fil, filename, FA_OPEN_APPEND | FA_WRITE);
     if (FR_OK != fr && FR_EXIST != fr)
         panic("f_open(%s) error: %s (%d)\n", filename, FRESULT_str(fr), fr);
@@ -41,5 +41,6 @@ int main() {
     f_unmount(pSD->pcName);
 
     puts("Goodbye, world!");
-    for (;;);
+    for (;;)
+        tight_loop_contents();
 }

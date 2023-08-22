@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include <drivers.h>
-#include "rm_pico_dev/src/Debug/SDCard/File.h"
-#include "rm_pico_dev/src/Debug/SDCard/Yaml.h"
-#include "rm_pico_dev/src/Debug/SDCard/TextFile.h"
+#include "../../rm_pico_dev/src/Debug/SDCard/File.h"
+#include "../../rm_pico_dev/src/Debug/SDCard/Yaml.h"
+#include "../../rm_pico_dev/src/Debug/SDCard/TextFile.h"
 
 // #include <nlohmann/json.hpp>
 
@@ -38,7 +38,7 @@ int main()
     pico::Drivers *drivers = new pico::Drivers();
     std::cout << "mounting..." << std::endl;
     drivers->sdCard.init();
-    drivers->sdCard.mountCard();
+    drivers->sdCard.mount();
     sleep_ms(100);
     std::cout << "reading file" << std::endl;
 
@@ -79,7 +79,7 @@ int main()
     }
     //--
 
-    drivers->sdCard.unmountCard();
+    drivers->sdCard.unmount();
     while (1)
     {
         // printf("doing stuff");
