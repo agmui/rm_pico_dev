@@ -3,6 +3,10 @@
 This is a [taproot](https://github.com/uw-advanced-robotics/taproot) port to work on the pi pico.
 taproot github: https://github.com/uw-advanced-robotics/taproot
 
+If your just getting started I recomend you go to the 
+[sample_rm_pico_app](https://github.com/agmui/sample_rm_pico_app)
+repo.
+
 cloning this repo
 
 ```bash
@@ -88,3 +92,4 @@ and uses things like modm properly
 * general TODO statements everywhere
 * fix CliFunctions.cpp to be a class
 * if doing a re port of taproot also port over the wiki
+* rewrite cli using [this](https://github.com/funbiscuit/embedded-cli#embedded-cli) 
