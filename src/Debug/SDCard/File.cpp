@@ -87,7 +87,7 @@ namespace debugtools
     // TODO: add cap to write to size?
     bool File::overWrite(const char *buf)
     {
-        // erase everyting in file and open for writing
+        // erase everything in file and open for writing
         bool rez = true;
         rez = open(FA_CREATE_ALWAYS | FA_WRITE | FA_READ);
 

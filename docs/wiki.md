@@ -181,7 +181,7 @@ TODO:
 
 ## debugging class demo
 
-TODO:
+TODO: 4 methods
 
 ## basic cli
 
@@ -1065,3 +1065,9 @@ then click to build:
 ## writing wokwi tests
 
 ## git auto testing wokwi
+
+[github's explanation](https://docs.github.com/en/actions/quickstart)
+
+## change config
+
+![change config](../../pics/change_config.png)
