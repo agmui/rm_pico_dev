@@ -58,7 +58,7 @@
 
 add_subdirectory(cli)
 add_subdirectory(hello_world)
-# add_subdirectory(motor)
+add_subdirectory(motor)
 # add_subdirectory(pico_2_pico_demo)
 add_subdirectory(remote)
 add_subdirectory(sd_card)

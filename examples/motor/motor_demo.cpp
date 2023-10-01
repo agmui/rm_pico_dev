@@ -2,17 +2,17 @@
 #include <drivers.h>
 #include <Debug.h>
 #include "pico/stdlib.h"
-#include "rm_pico_dev/src/algorithms/smooth_pid.hpp"
+#include "../../rm_pico_dev/src/algorithms/smooth_pid.hpp"
 
 int main(int argc, char const *argv[])
 {
 
     //sleep for a bit to let serial monitor connect
-    for (int i = 0; i < 6; i++)
-    {
-        sleep_ms(1000);
-        printf("%d,", 8 - i);
-    }
+    // for (int i = 0; i < 6; i++)
+    // {
+    //     sleep_ms(1000);
+    //     printf("%d,", 8 - i);
+    // }
 
     pico::Drivers *drivers = new pico::Drivers();
     // pico::Drivers *drivers = pico::Drivers::getDrivers();
@@ -38,7 +38,7 @@ int main(int argc, char const *argv[])
     while (1)
     {
         std::cout << "=============" << std::endl;
-        sleep_ms(550);
+        sleep_ms(1500);
         // Turn On LED
         gpio_put(25, 1); // Set pin 25 to high
         sleep_ms(250);

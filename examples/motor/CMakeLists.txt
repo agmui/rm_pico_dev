@@ -8,8 +8,8 @@ target_link_libraries(${PROJECT_NAME}
         )
 target_include_directories(${PROJECT_NAME} PRIVATE rm_pico_dev)
 
+pico_enable_stdio_uart(${PROJECT_NAME} 0)
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
-pico_enable_stdio_uart(${PROJECT_NAME} 1)
 # create u2f/map/bin/hex file etc.
 pico_add_extra_outputs(${PROJECT_NAME})
 
