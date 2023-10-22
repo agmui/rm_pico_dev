@@ -24,7 +24,7 @@ namespace pico::motor
      */
     enum MotorId : uint32_t
     {
-        MOTOR1 = 0X201,
+        MOTOR1 = 0X200,//0x201,
         MOTOR2 = 0x202,
         MOTOR3 = 0x203,
         MOTOR4 = 0x204,

@@ -1,2 +1,3 @@
 add_subdirectory(dbus)
+add_subdirectory(irq_uart)
 add_subdirectory(taproot_remote)

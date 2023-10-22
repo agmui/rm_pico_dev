@@ -1,4 +1,4 @@
-//code from taproot
+// code from taproot
 
 #ifndef PICO_UART_H_
 #define PICO_UART_H_
@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <queue>
 
 #include "hardware/uart.h"
 
@@ -25,13 +26,18 @@ namespace pico::communication::serial
     {
     private:
         uart_inst_t *uartPortToId[2] = {uart0, uart1}; /*!< to convert between UartPort and uart id*/
+
+        static inline std::queue<uint8_t> rxBuffer0;
+        static inline std::queue<uint8_t> rxBuffer1;
+
+        static void on_uart_rx0();
+        static void on_uart_rx1();
     public:
         enum UartPort
         {
             Uart0, /*!< uart0 */
             Uart1  /*!< uart1 */
         };
-
 
         enum Parity
         {
@@ -63,9 +69,9 @@ namespace pico::communication::serial
         }
 
         /**
-         * @brief 
+         * @brief
          * Initializes a particular Uart with the pins particular to the board.
-         * 
+         *
          * @param id port the particular port to initialize.
          * @param baudrate baudrate desired baud rate in Hz.
          * @param parity parity @see `Parity`.
@@ -140,13 +146,13 @@ namespace pico::communication::serial
         uart_inst_t *getUartID(UartPort port);
 
         /**
-         * @brief 
+         * @brief
          * Checks if data is waiting in the RX FIFO
-         * 
-         * @param port 
+         *
+         * @param port
          * \return true if the RX FIFO is not empty, otherwise false.
-         * @return true 
-         * @return false 
+         * @return true
+         * @return false
          */
         bool isReadable(UartPort port);
     };

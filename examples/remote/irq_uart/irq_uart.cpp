@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #include "pico/stdlib.h"
 #include "hardware/uart.h"
 #include "hardware/irq.h"
@@ -19,7 +25,7 @@
 #define UART_RX_PIN 1
 
 static int chars_rxed = 0;
-static uint8_t data[32]{0};
+static uint8_t data[18]{0};
 static uint8_t save_data[18]{0};
 uint32_t last_read = 0;
 
@@ -28,7 +34,7 @@ uint32_t last_read = 0;
 void parse_data()
 {
     printf("\nBREAK: ");
-    for (int i = 32-18-1; i < 32; i++)
+    for (int i = 0; i < 18; i++)
     {
         printf("%x,", data[i]);
         save_data[i] = data[i];
@@ -50,7 +56,6 @@ void on_uart_rx()
     // while stuff is in rx fifo
     while (uart_is_readable(UART_ID))
     {
-        /*
         // read one byte(blocking)
         //API: https://www.raspberrypi.com/documentation/pico-sdk/hardware.html#rpipbf59a4c19126a5547408
         uint8_t ch = uart_getc(UART_ID);
@@ -63,9 +68,6 @@ void on_uart_rx()
         //[dbus decoding guide](https://drive.google.com/file/d/1a5kaTsDvG89KQwy3fkLVkxKaQJfJCsnu/view)
         if (chars_rxed >= 18)
             parse_data();
-        */
-        uart_read_blocking(UART_ID, data, 32);
-        parse_data();
 
     }
 }
@@ -91,19 +93,19 @@ int main()
     uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
 
     // Turn off FIFO's - we want to do this character by character
-    uart_set_fifo_enabled(UART_ID, true);
+    uart_set_fifo_enabled(UART_ID, false);
 
     // Set up a RX interrupt
     // We need to set up the handler first
     // Select correct interrupt for the UART we are using
-    // int UART_IRQ = UART_ID == uart0 ? UART0_IRQ : UART1_IRQ;
+    int UART_IRQ = UART_ID == uart0 ? UART0_IRQ : UART1_IRQ;
 
-    // // And set up and enable the interrupt handlers
-    // irq_set_exclusive_handler(UART_IRQ, on_uart_rx);
-    // irq_set_enabled(UART_IRQ, true);
+    // And set up and enable the interrupt handlers
+    irq_set_exclusive_handler(UART_IRQ, on_uart_rx);
+    irq_set_enabled(UART_IRQ, true);
 
-    // // Now enable the UART to send interrupts - RX only
-    // uart_set_irq_enables(UART_ID, true, false);
+    // Now enable the UART to send interrupts - RX only
+    uart_set_irq_enables(UART_ID, true, false);
 
     // OK, all set up.
     // Lets send a basic string out, and then run a loop and wait for RX interrupts
@@ -122,8 +124,5 @@ int main()
         sleep_ms(250);
         gpio_put(LED_PIN, 0);
         sleep_ms(250);
-
-        
-        on_uart_rx();
     }
 }

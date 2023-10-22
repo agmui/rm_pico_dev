@@ -18,18 +18,18 @@ namespace pico::communication::serial
 
     void Remote::read() // TODO: check if remote init before read?
     {
-        std::cout << "read:" << std::endl;
         if (pico::clock::getTimeMilliseconds() - last_read > REMOTE_DISCONNECT_TIMEOUT)
         {
             // std::cout << time_us_32() - last_read << std::endl;
             connected = false;
-            clearRxBuffer();
+            // clearRxBuffer();
         }
         uint8_t data;
-        while (drivers->uart.isReadable(Board::REMOTE_SERIAL_UART_PORT))
+        while (drivers->uart.read(Board::REMOTE_SERIAL_UART_PORT, &data) && chars_rxed < 18)
         {
-            drivers->uart.read(Board::REMOTE_SERIAL_UART_PORT, &data);
-            // uint8_t data = uart_getc(uart0);
+            // std::cout << "read:" << std::endl;
+            // drivers->uart.read(Board::REMOTE_SERIAL_UART_PORT, &data);
+            // data = uart_getc(uart0);
 
             last_read = pico::clock::getTimeMilliseconds();
             // printf("data: %#x\n", data);
@@ -79,6 +79,7 @@ namespace pico::communication::serial
     {
 
 // #ifdef DEBUG
+// /*
         printf("\nrxBuffer: ");
         for (int i = 0; i < 18; i++)
         {
@@ -87,6 +88,7 @@ namespace pico::communication::serial
             // data[i] = 0;
         }
         printf("\n");
+// */
 // #endif // DEBUG
 
         // this is a wonky encoding implemented by our "good pal Li Qingzhi" as stated by a chinese
@@ -125,7 +127,21 @@ namespace pico::communication::serial
             (abs(remote.leftVertical) > STICK_MAX_VALUE) || (abs(remote.wheel) > STICK_MAX_VALUE))
         {
             // RAISE_ERROR(drivers, "invalid remote joystick values");
-            printf("ERROR: invalid remote joystick values");
+            printf("ERROR: invalid remote joystick values\n");
+            printf("checks: rightH %d, rightV %d, leftH %d, leftV %d, wheel %d\n",
+                (abs(remote.rightHorizontal) > STICK_MAX_VALUE),
+                (abs(remote.rightVertical) > STICK_MAX_VALUE),
+                (abs(remote.leftHorizontal) > STICK_MAX_VALUE),
+                (abs(remote.leftVertical) > STICK_MAX_VALUE),
+                (abs(remote.wheel) > STICK_MAX_VALUE)
+            );
+            printf("vals: %d, %d, %d, %d, %d\n",
+                remote.rightHorizontal,
+                remote.rightVertical,
+                remote.leftHorizontal,
+                remote.leftVertical,
+                remote.wheel
+            );
         }
 
         //TODO:
@@ -146,6 +162,7 @@ namespace pico::communication::serial
         {
             rxBuffer[i] = 0;
         }
+        // Clear Uart0 rxBuffer
         drivers->uart.discardReceiveBuffer(Board::REMOTE_SERIAL_UART_PORT);
     }
 

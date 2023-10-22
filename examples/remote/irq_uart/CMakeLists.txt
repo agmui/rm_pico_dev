@@ -1,14 +1,14 @@
-project(pico_transmit)
-add_executable(${PROJECT_NAME} pico_transmit.cpp)
+project(irq_uart)
+add_executable(${PROJECT_NAME} irq_uart.cpp)
 
 # pull in common dependencies
 target_link_libraries(${PROJECT_NAME}
         pico_stdlib
+        rm_pico_dev
         )
 
-
-pico_enable_stdio_uart(${PROJECT_NAME} 0)
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
+pico_enable_stdio_uart(${PROJECT_NAME} 0)
 
 # create u2f/map/bin/hex file etc.
 pico_add_extra_outputs(${PROJECT_NAME})

@@ -3,7 +3,7 @@
 #include "hardware/pio.h"
 extern "C"
 {
-#include "can2040.h"
+#include "rm_pico_dev/lib/can2040/src/can2040.h"
 }
 #include "RP2040.h"
 
@@ -24,7 +24,7 @@ PIOx_IRQHandler(void)
 void canbus_setup(void)
 {
     uint32_t pio_num = 0;
-    uint32_t sys_clock = 125000000, bitrate = 500000;
+    uint32_t sys_clock = 125000000, bitrate = 1000000;
     uint32_t gpio_rx = 4, gpio_tx = 5;
 
     // Setup canbus
@@ -63,11 +63,6 @@ int main()
         msg.data[5] = 0x00;
         msg.data[6] = 0x00;
         msg.data[7] = 0x00;
-
-        for (int i = 0; i < 5; i++)
-        {
-            msg.data[i] = (int)*(pilk + i);
-        }
 
         int res = can2040_transmit(&cbus, &msg);
         printf("Sending! PILK returned: %d\n", res);
