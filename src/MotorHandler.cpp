@@ -69,7 +69,6 @@ namespace pico::motor
 
     void MotorHandler::encodeAndSendCanData()
     {
-        std::cout << "encodeAndSend" << std::endl;
         // set up new can messages to be sent via CAN bus 1 and 2
         // TODO:
         can2040_msg can1MessageLow = {
@@ -143,13 +142,11 @@ namespace pico::motor
         bool *validMotorMessageLow,
         bool *validMotorMessageHigh)
     {
-        std::cout << "serializeMotorStore" << std::endl;
         for (int i = 0; i < DJI_MOTORS_PER_CAN; i++)
         {
             const DjiMotor *const motor = canMotorStore[i];
             if (motor != nullptr)
             {
-                std::cout << "==serializeMotorStore 2" << std::endl;
                 if (DJI_MOTOR_TO_NORMALIZED_ID(motor->getMotorIdentifier()) <=
                     DJI_MOTOR_TO_NORMALIZED_ID(pico::motor::MOTOR4))
                 {
