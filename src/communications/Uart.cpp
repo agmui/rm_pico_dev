@@ -64,17 +64,42 @@ namespace pico::communication::serial
         }
     }
 
+
+    /**
+     * @brief
+     * uart RX interrupt handler
+     */
+    void Uart::on_uart_rx1()
+    {
+        // while stuff is in rx fifo
+        while (uart_is_readable(uart1))
+        {
+            // read one byte(blocking)
+            //API: https://www.raspberrypi.com/documentation/pico-sdk/hardware.html#rpipbf59a4c19126a5547408
+            uint8_t ch; 
+            uart_read_blocking(uart1, &ch, 1);
+            rxBuffer1.push(ch);
+        }
+    }
+
     bool Uart::read(UartPort port, uint8_t *data)
     {
-        if(rxBuffer0.empty()) return false;
-        else if(port==UartPort::Uart0){
+        if(port==UartPort::Uart0){
+            if(rxBuffer0.empty()) 
+                return false;
             *data = rxBuffer0.front();
             rxBuffer0.pop();
+            return true;
+        } else{
+            if(rxBuffer1.empty()) 
+                return false;
+            *data = rxBuffer1.front();
+            rxBuffer1.pop();
+            return true;
         }
         // uart_read_blocking(getUartID(port), data, 1);
         // uint8_t ch = uart_getc(getUartID(port));
         // data = &ch;
-        return true;
     }
 
     std::size_t Uart::discardReceiveBuffer(UartPort port)
@@ -90,6 +115,11 @@ namespace pico::communication::serial
             while(!rxBuffer0.empty()){
                 rx_drained_chars++;
                 rxBuffer0.pop();
+            } 
+        }else{
+            while(!rxBuffer1.empty()){
+                rx_drained_chars++;
+                rxBuffer1.pop();
             } 
         }
         return rx_drained_chars;
