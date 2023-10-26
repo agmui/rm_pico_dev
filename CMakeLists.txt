@@ -143,6 +143,14 @@ target_link_libraries(can2040
 target_link_libraries(${PROJECT_NAME} can2040)
 target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
 
+# add_library(icecream lib/icecream/icecream.hpp)
+# set_target_properties(icecream PROPERTIES LINKER_LANGUAGE CXX)
+# target_link_libraries(icecream
+#     picos_stdlib
+#     hardware_mutex
+# )
+target_include_directories(${PROJECT_NAME} PRIVATE lib/icecream/)
+
 # arduino-compat retroterm
 # add_subdirectory(lib/pico-arduino-compat/libs/retroterm)
 # target_link_libraries(${PROJECT_NAME} 
