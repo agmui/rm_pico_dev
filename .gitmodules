@@ -10,3 +10,7 @@
 	path = lib/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
 	shallow = true
+[submodule "test/cmocka"]
+	path = test/cmocka
+	url = https://gitlab.com/cmocka/cmocka.git
+	shallow = true
