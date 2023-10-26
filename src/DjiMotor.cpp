@@ -104,7 +104,6 @@ bool DjiMotor::isMotorOnline() const
 
 void DjiMotor::serializeCanSendData(struct can2040_msg *txMessage) const
 {
-    std::cout << "serialize" << std::endl;
     int id = DJI_MOTOR_TO_NORMALIZED_ID(this->getMotorIdentifier());  // number between 0 and 7
     // this method assumes you have choosen the correct message
     // to send the data in. Is blind to message type and is a private method

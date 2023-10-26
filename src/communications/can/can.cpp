@@ -54,13 +54,13 @@ namespace pico::can
     {
         if (notify == CAN2040_NOTIFY_RX)
         {
-            printf("msg read: ");
-            printf("%s\n", msg->data);
-            message.id = msg->id;
-            message.dlc = msg->id;
-            for (int i = 0; i < 8; i++)
-                message.data[i] = msg->data[i];
-            last_read = pico::clock::getTimeMilliseconds();
+            // printf("msg read: ");
+            // printf("%s\n", msg->data);
+            // message.id = msg->id;
+            // message.dlc = msg->id;
+            // for (int i = 0; i < 8; i++)
+            //     message.data[i] = msg->data[i];
+            // last_read = pico::clock::getTimeMilliseconds();
         }
     }
 
@@ -130,7 +130,6 @@ namespace pico::can
         //FIXME: can2040_check_transmit returns false?
         case PioNum::CAN_BUS0:
             s = can2040_check_transmit(&cbus);
-            printf("isReadyToSend cbus: %d\n", s);
             return true; //s;
             // return can2040_check_transmit(&cbus);//Can1::isReadyToSend();
         case PioNum::CAN_BUS1:
