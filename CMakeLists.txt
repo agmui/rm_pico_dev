@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD 17)
 #==================== building docs====================s
 find_package(Doxygen)
 if(Doxygen_FOUND)
-    add_subdirectory(docs)
+    # add_subdirectory(docs)
 else()
     message(STATUS "Doxygen not found, not building docs")
 endif()
@@ -113,7 +113,7 @@ target_include_directories(${PROJECT_NAME}
 # endif()
 
 # if(TEST_BUILD)
-  add_subdirectory(test)
+#   add_subdirectory(test)
 # endif()
 
 
@@ -153,7 +153,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE lib/can2040/src/)
 #     picos_stdlib
 #     hardware_mutex
 # )
-target_include_directories(${PROJECT_NAME} PRIVATE lib/icecream/)
+# target_include_directories(${PROJECT_NAME} PRIVATE lib/icecream/)
+# target_link_libraries(${PROJECT_NAME} icecream)
 
 # arduino-compat retroterm
 # add_subdirectory(lib/pico-arduino-compat/libs/retroterm)
@@ -210,7 +211,11 @@ set(YAML_CPP_BUILD_TESTS OFF) #do it again idk
 set(YAML_CPP_BUILD_TOOLS OFF)
 set(YAML_CPP_BUILD_CONTRIB OFF)
 include(FetchContent)
-FetchContent_Declare(yaml-cpp URL https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-0.7.0.tar.gz)
+FetchContent_Declare(
+        yaml-cpp
+        URL https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-0.7.0.tar.gz
+        DOWNLOAD_EXTRACT_TIMESTAMP true # sets timestamp and prevents some err
+)
 FetchContent_MakeAvailable(yaml-cpp)
 
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
@@ -235,11 +240,11 @@ target_link_libraries(${PROJECT_NAME} yaml-cpp)
 
 
 #====================google test====================  
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
+# include(FetchContent)
+# FetchContent_Declare(
+#   googletest
+#   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+# )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 # set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 # FetchContent_MakeAvailable(googletest)
@@ -258,5 +263,8 @@ set(public_headers
     HEADER
 )
 
+
 #==================== adding example====================s
 add_subdirectory(examples)
+
+# add_subdirectory(test)

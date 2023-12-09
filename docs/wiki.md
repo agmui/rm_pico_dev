@@ -10,7 +10,7 @@ You can either compile the files in the examples folder or just copy the code fo
 
 ## hello world
 
-```c++
+```cpp
 #include <iostream>
 #include "pico/stdlib.h" // the pico-sdk lib
 #include <stdio.h>
@@ -43,7 +43,7 @@ int main(int argc, char const *argv[])
 
 ## remote demo
 
-```c++
+```cpp
 #include <iostream>
 #include <drivers.h>
 #include <Debug.h>
@@ -91,7 +91,7 @@ TODO:
 
 ## motor demo
 
-```c++
+```cpp
 #include <iostream>
 #include <drivers.h>
 #include <Debug.h>
@@ -185,7 +185,7 @@ TODO: 4 methods
 
 ## basic cli
 
-```c++
+```cpp
 #include <iostream>
 #include <drivers.h>
 #include <stdio.h>
@@ -228,7 +228,7 @@ int main()
 TODO:
 you cant "sniff" any var, cuz u have drivers, or just run some test
 
-```c++
+```cpp
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include <drivers.h>
@@ -295,7 +295,7 @@ int main()
 
 ## cli sd card demo
 
-```c++
+```cpp
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include <drivers.h>
@@ -348,7 +348,7 @@ TODO:
 currently only works well with Putty  
 screen, minicom, and serial terminal have mixed results
 
-```c++
+```cpp
 #include <stdio.h>
 #include <iostream>
 #include "pico/stdlib.h"
@@ -386,7 +386,7 @@ rm_pico_dev. So only use its functions if you need to.
 
 ## basic input output
 
-```c++
+```cpp
 #include <stdio.h>
 #include "pico/stdlib.h"
 
@@ -426,7 +426,7 @@ int main(){
 
 ## basic shell
 
-```c++
+```cpp
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/uart.h"
@@ -476,7 +476,7 @@ from [simple_example](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico/tree
 API for refrance: [no-OS-FatFS-SD-SPI-RPi-Pico](https://github.com/carlk3/no-OS-FatFS-SD-SPI-RPi-Pico#using-the-application-programming-interface)  
 hw_config.c
 
-```c++
+```cpp
 /* hw_config.c
 Copyright 2021 Carl John Kugler III
 
@@ -580,7 +580,7 @@ spi_t *spi_get_by_num(size_t num) {
 
 main.cpp
 
-```c++
+```cpp
 #include <stdio.h>
 //
 #include "f_util.h"
@@ -638,7 +638,7 @@ go to pico-example lib
 uses irq and mostly taken from [basic uart](#basic-uart)  
 [dbus decoding guide](https://drive.google.com/file/d/1a5kaTsDvG89KQwy3fkLVkxKaQJfJCsnu/view)
 
-```c++
+```cpp
 /**
  * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
  *
@@ -769,7 +769,7 @@ can2040 [API](https://github.com/KevinOConnor/can2040/blob/master/docs/API.md)
 
 pico_transmit.cpp
 
-```c++
+```cpp
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
@@ -859,7 +859,7 @@ int main()
 
 pico_receive.cpp
 
-```c++
+```cpp
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
@@ -971,7 +971,7 @@ and has everything. If you need to do any library operation it is General throug
 drivers object.
 ex:
 
-```c++
+```cpp
 drivers->remote.isConnected();
 drivers->motorHandler.pollCanData(); 
 ...
