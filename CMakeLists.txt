@@ -211,10 +211,15 @@ set(YAML_CPP_BUILD_TESTS OFF) #do it again idk
 set(YAML_CPP_BUILD_TOOLS OFF)
 set(YAML_CPP_BUILD_CONTRIB OFF)
 include(FetchContent)
+# FetchContent_Declare(
+#         yaml-cpp
+#         URL https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-0.7.0.tar.gz
+#         DOWNLOAD_EXTRACT_TIMESTAMP true # sets timestamp and prevents some err
+# )
 FetchContent_Declare(
         yaml-cpp
-        URL https://github.com/jbeder/yaml-cpp/archive/refs/tags/yaml-cpp-0.7.0.tar.gz
-        DOWNLOAD_EXTRACT_TIMESTAMP true # sets timestamp and prevents some err
+        GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+        GIT_TAG yaml-cpp-0.7.0
 )
 FetchContent_MakeAvailable(yaml-cpp)
 
