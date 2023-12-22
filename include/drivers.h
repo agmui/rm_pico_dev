@@ -3,7 +3,7 @@
 
 #include "Debug.h"
 #include "MotorHandler.h"
-#include "MPU6050.h"
+#include "BNO055.h"
 #include "RefSerial.h"
 #include "Remote.h"
 #include "SDCard.h"
@@ -19,7 +19,7 @@ namespace pico
         Drivers() //only use in mock
             : debug(this),
               motorHandler(this),
-              mpu6050(this),
+              bmo055(this),
               refSerial(this),
               remote(this),
               uart(),
@@ -33,7 +33,7 @@ namespace pico
 
         debugtools::Debug debug;
         motor::MotorHandler motorHandler;
-        communication::sensors::imu::mpu6050::MPU6050 mpu6050;
+        communication::sensors::imu::bno055::BNO055 bmo055;
         communication::serial::RefSerial refSerial;
         communication::serial::Remote remote;
         debugtools::SDCard sdCard;
