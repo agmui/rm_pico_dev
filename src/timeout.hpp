@@ -28,10 +28,8 @@
 
 #include "clock.h"
 
-namespace pico
-{
-namespace arch
-{
+namespace pico {
+    namespace arch {
 /**
  * A class for keeping track of a timer that expires. Template argument
  * expects a function pointer that returns a uin32_t representing some absolute
@@ -39,83 +37,78 @@ namespace arch
  *
  * Doesn't start until `restart()` is called
  */
-template <uint32_t (*T)()>
-class Timeout
-{
-    template <typename H>
-    friend class PeriodicTimer;
+        template<uint32_t (*T)()>
+        class Timeout {
+            template<typename H>
+            friend
+            class PeriodicTimer;
 
-private:
-    bool isRunning;
-    bool isExecuted;
-    uint32_t expireTime;
+        private:
+            bool isRunning;
+            bool isExecuted;
+            uint32_t expireTime;
 
-public:
-    static constexpr auto TimeFunc = T;
+        public:
+            static constexpr auto TimeFunc = T;
 
-    Timeout()
-    {
-        stop();
-        this->expireTime = 0;
-    }
+            Timeout() {
+                stop();
+                this->expireTime = 0;
+            }
 
-    explicit Timeout(uint32_t timeout) { restart(timeout); }
+            explicit Timeout(uint32_t timeout) { restart(timeout); }
 
-    /**
-     * Set the timer to expire in `timeout` units of time.
-     *
-     * @param[in] timeout: the amount of time from when this function
-     * is called that the timer should expire.
-     */
-    inline void restart(uint32_t timeout)
-    {
-        this->isRunning = true;
-        this->isExecuted = false;
-        this->expireTime = TimeFunc() + timeout;
-    }
+            /**
+             * Set the timer to expire in `timeout` units of time.
+             *
+             * @param[in] timeout: the amount of time from when this function
+             * is called that the timer should expire.
+             */
+            inline void restart(uint32_t timeout) {
+                this->isRunning = true;
+                this->isExecuted = false;
+                this->expireTime = TimeFunc() + timeout;
+            }
 
-    /**
-     * Stop the timer. If expired, the expiration flags are cleared.
-     */
-    inline void stop()
-    {
-        this->isRunning = false;
-        this->isExecuted = false;
-    }
+            /**
+             * Stop the timer. If expired, the expiration flags are cleared.
+             */
+            inline void stop() {
+                this->isRunning = false;
+                this->isExecuted = false;
+            }
 
-    /**
-     * @return `true` if the timer is stopped
-     */
-    inline bool isStopped() const { return !this->isRunning; }
+            /**
+             * @return `true` if the timer is stopped
+             */
+            inline bool isStopped() const { return !this->isRunning; }
 
-    /**
-     * @return `true` if the timer has expired (timeout has been reached) and is NOT
-     * stopped.
-     */
-    inline bool isExpired() const { return this->isRunning && TimeFunc() >= this->expireTime; }
+            /**
+             * @return `true` if the timer has expired (timeout has been reached) and is NOT
+             * stopped.
+             */
+            inline bool isExpired() const { return this->isRunning && TimeFunc() >= this->expireTime; }
 
-    /**
-     * Returns `true` on the first call when timer has expired since restart. Use to
-     * only catch the timeout expiration once.
-     *
-     * @return `true` the first time the timer has expired (timeout has been reached)
-     * since last `restart()`
-     */
-    inline bool execute()
-    {
-        if (!isExecuted && isExpired())
-        {
-            isExecuted = true;
-            return true;
-        }
+            /**
+             * Returns `true` on the first call when timer has expired since restart. Use to
+             * only catch the timeout expiration once.
+             *
+             * @return `true` the first time the timer has expired (timeout has been reached)
+             * since last `restart()`
+             */
+            inline bool execute() {
+                if (!isExecuted && isExpired()) {
+                    isExecuted = true;
+                    return true;
+                }
 
-        return false;
-    }
-};
+                return false;
+            }
+        };
 
-// using MicroTimeout = Timeout<pico::clock::getTimeMicroseconds>; the pico does not have this
-using MilliTimeout = Timeout<pico::clock::getTimeMilliseconds>;
-}  // namespace arch
+        using MicroTimeout = Timeout<pico::clock::getTimeMicroseconds>;
+        using MilliTimeout = Timeout<pico::clock::getTimeMilliseconds>;
+    }  // namespace arch
 }  // namespace pico
 
 #endif  // TAPROOT_TIMEOUT_HPP_
