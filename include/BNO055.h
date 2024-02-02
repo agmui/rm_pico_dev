@@ -287,7 +287,7 @@ namespace pico::communication::sensors::imu::bno055 {
          *
          * @note this function can block for approximately 12 seconds.
          */
-        bool init(float sampleFrequency, float mahonyKp, float mahonyKi);
+        bool init();
 
         /**
          * Read data from the imu.

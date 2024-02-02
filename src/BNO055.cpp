@@ -10,7 +10,7 @@ namespace pico::communication::sensors::imu::bno055 {
 
     }
 
-    bool BNO055::init(float sampleFrequency, float mahonyKp, float mahonyKi) {
+    bool BNO055::init() {
 
         i2c_init(I2C_PORT, 400 * 1000);
         // Init i2c pins on pico
