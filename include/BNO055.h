@@ -267,19 +267,14 @@ namespace pico::communication::sensors::imu::bno055 {
             uint16_t temperature = 0;
 
             /**
-             * Acceleration offset calculated in init.
+             * Acceleration offset set in init.
              */
-            vector accelOffset{};
+            vector accelOffset{0,0,0};
             /**
              * Gyroscope offset calculated in init.
              */
-            vector gyroOffset{};
+            vector gyroOffset{0,0,0};
         };
-
-        using ProcessRawBNO055DataFn = void (*)(
-                const uint8_t (&)[ACC_MAG_GYRO_TEMPERATURE_BUFF_RX_SIZE],
-                vector &accel,
-                vector &gyro);
 
         BNO055(Drivers *drivers);
 
@@ -346,7 +341,7 @@ namespace pico::communication::sensors::imu::bno055 {
 //         return validateReading(
 //             static_cast<float>(raw.accel.x - raw.accelOffset.x) * ACCELERATION_GRAVITY /
 //             ACCELERATION_SENSITIVITY);
-            return convertRawLin(raw.accel.z, raw.accelOffset.z);
+            return convertRawLin(raw.accel.z);
         }
 
         /**
@@ -357,7 +352,7 @@ namespace pico::communication::sensors::imu::bno055 {
 //         return validateReading(
 //             static_cast<float>(raw.accel.y - raw.accelOffset.y) * ACCELERATION_GRAVITY /
 //             ACCELERATION_SENSITIVITY);
-            return convertRawLin(raw.accel.z, raw.accelOffset.z);
+            return convertRawLin(raw.accel.z);
         }
 
         /**
@@ -368,7 +363,7 @@ namespace pico::communication::sensors::imu::bno055 {
 //         return validateReading(
 //             static_cast<float>(raw.accel.z - raw.accelOffset.z) * ACCELERATION_GRAVITY /
 //             ACCELERATION_SENSITIVITY);
-            return convertRawLin(raw.accel.z, raw.accelOffset.z);
+            return convertRawLin(raw.accel.z);
         }
 
         /**
@@ -378,7 +373,7 @@ namespace pico::communication::sensors::imu::bno055 {
         inline float getGx() {
 //         return validateReading(
 //             static_cast<float>(raw.gyro.x - raw.gyroOffset.x) / LSB_D_PER_S_TO_D_PER_S);
-            return convertRawDeg(raw.gyro.x, raw.gyroOffset.x);
+            return convertRawDeg(raw.gyro.x);
         }
 
         /**
@@ -388,7 +383,7 @@ namespace pico::communication::sensors::imu::bno055 {
         inline float getGy() {
 //         return validateReading(
 //             static_cast<float>(raw.gyro.y - raw.gyroOffset.y) / LSB_D_PER_S_TO_D_PER_S);
-            return convertRawDeg(raw.gyro.y, raw.gyroOffset.y);
+            return convertRawDeg(raw.gyro.y);
         }
 
         /**
@@ -398,7 +393,7 @@ namespace pico::communication::sensors::imu::bno055 {
         inline float getGz() {
 //         return validateReading(
 //             static_cast<float>(raw.gyro.z - raw.gyroOffset.z) / LSB_D_PER_S_TO_D_PER_S);
-            return convertRawDeg(raw.gyro.z, raw.gyroOffset.z);
+            return convertRawDeg(raw.gyro.z);
         }
 
         /**
@@ -437,8 +432,6 @@ namespace pico::communication::sensors::imu::bno055 {
          * Uninitializes the bno055 and enters calibration mode.
          */
         void requestCalibration();
-
-        void attachProcessRawBNO055DataFn(ProcessRawBNO055DataFn fn) { processRawBNO055DataFn = fn; }
 
 
         /*!
@@ -536,7 +529,7 @@ namespace pico::communication::sensors::imu::bno055 {
         /**
          * Use to convert the raw acceleration into more conventional degrees / second^2
          */
-        static constexpr float ACCELERATION_SENSITIVITY = 4096.0f;
+        static constexpr float ACCELERATION_SENSITIVITY = 100.0;
 
         /**
          * The number of samples we take while calibrating in order to determine the mpu offsets.
@@ -565,8 +558,6 @@ namespace pico::communication::sensors::imu::bno055 {
 
         Drivers *drivers;
 
-        ProcessRawBNO055DataFn processRawBNO055DataFn;
-
         int delayBtwnCalcAndReadReg = 2000 - NONBLOCKING_TIME_TO_READ_REG;
 
         ImuState imuState = ImuState::IMU_NOT_CONNECTED;
@@ -577,10 +568,6 @@ namespace pico::communication::sensors::imu::bno055 {
 
         RawData raw;
 
-        //    Mahony mahonyAlgorithm;
-
-        //    imu_heater::ImuHeater imuHeater;
-
         float tiltAngle = 0.0f;
         bool tiltAngleCalculated = false;
 
@@ -588,23 +575,13 @@ namespace pico::communication::sensors::imu::bno055 {
 
         uint8_t rxBuff[ACC_MAG_GYRO_TEMPERATURE_BUFF_RX_SIZE] = {0};
 
-        int calibrationSample = 0;
+//        int calibrationSample = 0;
 
         uint8_t errorState = 0;//TODO:
 
         uint32_t prevIMUDataReceivedTime = 0;
 
         // Functions for interacting with hardware directly.
-
-        /**
-         * Pull the NSS pin low to initiate contact with the imu.
-         */
-        void mpuNssLow();
-
-        /**
-         * Pull the NSS pin high to end contact with the imu.
-         */
-        void mpuNssHigh();
 
         /**
          * @brief Convert between raw read bytes to \f$\frac{\mbox{degrees}}{\mbox{second}}\f$.
@@ -616,9 +593,9 @@ namespace pico::communication::sensors::imu::bno055 {
          * @param offset
          * @return
          */
-        float convertRawDeg(uint8_t rawDeg, uint8_t offset) {
+        float convertRawDeg(uint8_t rawDeg) {
             return validateReading(
-                    static_cast<float>(rawDeg - offset) / LSB_D_PER_S_TO_D_PER_S);
+                    static_cast<float>(rawDeg) / LSB_D_PER_S_TO_D_PER_S);
         }
 
         /**
@@ -630,12 +607,11 @@ namespace pico::communication::sensors::imu::bno055 {
          * @param offset
          * @return
          */
-        float convertRawLin(uint8_t rawLin, uint8_t offset) {
-            /*
-            */
-            return validateReading(
-                    static_cast<float>(rawLin - offset) * ACCELERATION_GRAVITY /
-                    ACCELERATION_SENSITIVITY);
+        float convertRawLin(uint8_t rawLin) {
+//            return validateReading(
+//                    static_cast<float>(rawLin - offset) * ACCELERATION_GRAVITY /
+//                    ACCELERATION_SENSITIVITY);
+            return validateReading(static_cast<float>(rawLin)  / ACCELERATION_SENSITIVITY);
         }
 
         /**
@@ -655,16 +631,10 @@ namespace pico::communication::sensors::imu::bno055 {
          */
         void i2cReadRegisters(bno055_reg_t reg, uint8_t *data, size_t len);
 
-        /**
-         * Add any errors to the error handler that have came up due to calls to validateReading.
-         */
-        void addValidationErrors();
-
-        /// Default processing function when IMU is lying flat on the robot.
-        static void defaultProcessRawMpu6500Data(
-                const uint8_t (&rxBuff)[ACC_MAG_GYRO_TEMPERATURE_BUFF_RX_SIZE],
-                vector &accel,
-                vector &gyro);
+//        /**
+//         * Add any errors to the error handler that have came up due to calls to validateReading.
+//         */
+//        void addValidationErrors();
 
     };
 } // namespace pico::communication::sensors::imu::bno055

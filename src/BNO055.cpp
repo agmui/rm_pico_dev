@@ -1,3 +1,4 @@
+#include <cmath>
 #include "drivers.h"
 #include "BNO055.h"
 
@@ -56,6 +57,30 @@ namespace pico::communication::sensors::imu::bno055 {
         i2cWriteRegister(BNO055_OPR_MODE_ADDR, 0x0C);
         sleep_ms(100);
 
+        if(raw.accelOffset.x+raw.accelOffset.y+raw.accelOffset.z!=0){
+            i2cWriteRegister(ACCEL_OFFSET_X_LSB_ADDR, (uint8_t)raw.accelOffset.x);
+//            i2cWriteRegister(ACCEL_OFFSET_X_MSB_ADDR, );
+            sleep_ms(1);
+            i2cWriteRegister(ACCEL_OFFSET_Y_LSB_ADDR, (uint8_t)raw.accelOffset.y);
+//            i2cWriteRegister(ACCEL_OFFSET_Y_MSB_ADDR, );
+            sleep_ms(1);
+            i2cWriteRegister(ACCEL_OFFSET_Z_LSB_ADDR, (uint8_t)raw.accelOffset.z);
+//            i2cWriteRegister(ACCEL_OFFSET_Z_MSB_ADDR, );
+            sleep_ms(1);
+        }
+
+        if(raw.gyroOffset.x+raw.gyroOffset.y+raw.gyroOffset.z!=0) {
+            i2cWriteRegister(GYRO_OFFSET_X_LSB_ADDR,(uint8_t)raw.gyroOffset.x);
+//            i2cWriteRegister(GYRO_OFFSET_X_MSB_ADDR,);
+            sleep_ms(1);
+            i2cWriteRegister(GYRO_OFFSET_Y_LSB_ADDR,(uint8_t)raw.gyroOffset.y);
+//            i2cWriteRegister(GYRO_OFFSET_Y_MSB_ADDR,);
+            sleep_ms(1);
+            i2cWriteRegister(GYRO_OFFSET_Z_LSB_ADDR,(uint8_t)raw.gyroOffset.z);
+//            i2cWriteRegister(GYRO_OFFSET_Z_MSB_ADDR,);
+            sleep_ms(1);
+        }
+
         imuState = ImuState::IMU_NOT_CALIBRATED;
         return true;
     }
@@ -111,13 +136,28 @@ namespace pico::communication::sensors::imu::bno055 {
         return false;//TODO
     }
 
-    float getTiltAngle() {
-        //TODO:
-        return 0.0;
+    float BNO055::getTiltAngle() {
+        const float deg_to_rad = M_PI / 180.0;
+        if (!tiltAngleCalculated) {
+            tiltAngle = acosf(cosf(getPitch() * deg_to_rad) * cosf(getRoll() * deg_to_rad));
+            tiltAngle *= 180.0 / M_PI; // convert back from rad to deg
+            tiltAngleCalculated = true;
+        }
+        return validateReading(tiltAngle);
     }
 
-    void requestCalibration() {
-
+    void BNO055::requestCalibration() {
+        if (imuState == ImuState::IMU_NOT_CALIBRATED || imuState == ImuState::IMU_CALIBRATED)
+        {
+            raw.gyroOffset.x = 0;
+            raw.gyroOffset.y = 0;
+            raw.gyroOffset.z = 0;
+            raw.accelOffset.x = 0;
+            raw.accelOffset.y = 0;
+            raw.accelOffset.z = 0;
+//            calibrationSample = 0;
+            imuState = ImuState::IMU_CALIBRATING;
+        }
     }
 
     void BNO055::getSystemStatus(uint8_t *system_status, uint8_t *self_test_result, uint8_t *system_error) {
@@ -156,21 +196,21 @@ namespace pico::communication::sensors::imu::bno055 {
             case VECTOR_MAGNETOMETER:
             case VECTOR_GYROSCOPE:
             case VECTOR_EULER:
-                vector.x = convertRawDeg(data[0], raw.gyroOffset.x);
-                vector.y = convertRawDeg(data[1], raw.gyroOffset.y);
-                vector.z = convertRawDeg(data[2], raw.gyroOffset.z);
+                vector.x = convertRawDeg(data[0]);
+                vector.y = convertRawDeg(data[1]);
+                vector.z = convertRawDeg(data[2]);
                 break;
             case VECTOR_ACCELEROMETER:
             case VECTOR_LINEARACCEL:
             case VECTOR_GRAVITY:
-                vector.x = convertRawLin(data[0], raw.accelOffset.x);
-                vector.y = convertRawLin(data[1], raw.accelOffset.y);
-                vector.z = convertRawLin(data[2], raw.accelOffset.z);
+                vector.x = convertRawLin(data[0]);
+                vector.y = convertRawLin(data[1]);
+                vector.z = convertRawLin(data[2]);
                 break;
         }
     }
 
-    void BNO055::getQuaternions(int16_t &x, int16_t &y, int16_t &z, int16_t &w){
+    void BNO055::getQuaternions(int16_t &x, int16_t &y, int16_t &z, int16_t &w) {
         uint8_t data[8];
         memset(data, 0, 8);
 
@@ -181,9 +221,9 @@ namespace pico::communication::sensors::imu::bno055 {
         i2cReadRegisters(BNO055_QUATERNION_DATA_W_LSB_ADDR, data, 8);
 
         w = BIG_ENDIAN_INT16_TO_FLOAT(data);
-        x = BIG_ENDIAN_INT16_TO_FLOAT(data+1);
-        y = BIG_ENDIAN_INT16_TO_FLOAT(data+2);
-        z = BIG_ENDIAN_INT16_TO_FLOAT(data+3);
+        x = BIG_ENDIAN_INT16_TO_FLOAT(data + 1);
+        y = BIG_ENDIAN_INT16_TO_FLOAT(data + 2);
+        z = BIG_ENDIAN_INT16_TO_FLOAT(data + 3);
 //      w = (((uint16_t)data[1]) << 8) | ((uint16_t)data[0]);
 //      x = (((uint16_t)data[3]) << 8) | ((uint16_t)data[2]);
 //      y = (((uint16_t)data[5]) << 8) | ((uint16_t)data[4]);
@@ -220,14 +260,11 @@ namespace pico::communication::sensors::imu::bno055 {
         i2c_read_blocking(I2C_PORT, i2c_addr, data, len, false); // False - finished with bus
     }
 
-    void BNO055::addValidationErrors() {
+//    void BNO055::addValidationErrors() {
+//
+//
+//    }
 
-
-    }
-
-    void BNO055::defaultProcessRawMpu6500Data(const uint8_t (&rxBuff)[28], vector &accel, vector &gyro) {
-
-    }
 
 
 } // namespace BNO055
