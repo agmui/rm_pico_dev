@@ -35,12 +35,7 @@
 //#include "modm/processing/protothread.hpp"
 
 #define LITTLE_ENDIAN_INT16_TO_FLOAT(buff) \
-     (static_cast<float>(static_cast<int16_t>((*(buff) << 8) | *(buff + 1))))
-
-//#define BIG_ENDIAN_INT8_TO_DOUBLE(buffer, i) (static_cast<float>(buffer[i*2+1]<<8|buffer[(i*2)]))
-
-#define BIG_ENDIAN_INT16_TO_FLOAT(buff) \
-     (static_cast<float>(static_cast<int16_t>((*(buff+1) << 8) | *(buff))))
+    (static_cast<float>(static_cast<int16_t>((*(buff+1) << 8) | *(buff))))
 
 namespace pico {
     class Drivers;
@@ -247,7 +242,7 @@ namespace pico::communication::sensors::imu::bno055 {
             /**
              * Raw gyroscope data.
              */
-             vector gyro{};
+            vector gyro{};
 
             /**
              * Raw magnetometer data.
@@ -269,11 +264,17 @@ namespace pico::communication::sensors::imu::bno055 {
             /**
              * Acceleration offset set in init.
              */
-            vector accelOffset{0,0,0};
+            vector accelOffset{0, 0, 0};
             /**
              * Gyroscope offset calculated in init.
              */
-            vector gyroOffset{0,0,0};
+            vector gyroOffset{0, 0, 0};
+        };
+
+        static const size_t numOffsetReg = 22;
+        const uint8_t offsets[numOffsetReg] = {
+                247,255, 44,  0,214,255,250,254, 93,  1,102,
+                2,255,255,255,255,  4,  0,232,  3,100,  2,
         };
 
         BNO055(Drivers *drivers);
@@ -341,7 +342,7 @@ namespace pico::communication::sensors::imu::bno055 {
 //         return validateReading(
 //             static_cast<float>(raw.accel.x - raw.accelOffset.x) * ACCELERATION_GRAVITY /
 //             ACCELERATION_SENSITIVITY);
-            return convertRawLin(raw.accel.z);
+            return convertRawLin(raw.accel.x);
         }
 
         /**
@@ -352,7 +353,7 @@ namespace pico::communication::sensors::imu::bno055 {
 //         return validateReading(
 //             static_cast<float>(raw.accel.y - raw.accelOffset.y) * ACCELERATION_GRAVITY /
 //             ACCELERATION_SENSITIVITY);
-            return convertRawLin(raw.accel.z);
+            return convertRawLin(raw.accel.y);
         }
 
         /**
@@ -478,7 +479,7 @@ namespace pico::communication::sensors::imu::bno055 {
          *  @brief  Gets current calibration state.  Each value should be a uint8_t
          *          pointer and it will be set to 0 if not calibrated and 3 if
          *          fully calibrated.
-         *          See section 34.3.54
+         *          See section 3.10
          *  @param  sys
          *          Current system calibration status, depends on status of all sensors,
          * read-only
@@ -492,6 +493,14 @@ namespace pico::communication::sensors::imu::bno055 {
         void getCalibration(uint8_t *sys, uint8_t *gyro,
                             uint8_t *accel, uint8_t *mag);
 
+        /*!
+         *  @brief  Checks of all cal status values are set to 3 (fully calibrated)
+         *  @return status of calibration
+         *  See section 3.10
+         *  To calibrate the IMU you have to place it in 6 different orientation for
+         *  a few seconds
+         */
+        bool isFullyCalibrated();
 
         /*!
          *  @brief   Gets a vector reading from the specified source
@@ -504,6 +513,30 @@ namespace pico::communication::sensors::imu::bno055 {
          *            VECTOR_LINEARACCEL
          *            VECTOR_GRAVITY]
          *  @param  vector result from specified source
+         *
+         *  Absolute Orientation (Euler Vector, 100Hz)
+         *  Three axis orientation data based on a 360° sphere
+         *
+         *  Absolute Orientation (Quaterion, 100Hz)
+         *  Four point quaternion output for more accurate data manipulation
+         *
+         *  Angular Velocity Vector (100Hz)
+         *  Three axis of 'rotation speed' in rad/s
+         *
+         *  Acceleration Vector (100Hz)
+         *  Three axis of acceleration (gravity + linear motion) in m/s^2
+         *
+         *  Magnetic Field Strength Vector (20Hz)
+         *  Three axis of magnetic field sensing in micro Tesla (uT)
+         *
+         *  Linear Acceleration Vector (100Hz)
+         *  Three axis of linear acceleration data (acceleration minus gravity) in m/s^2
+         *
+         *  Gravity Vector (100Hz)
+         *  Three axis of gravitational acceleration (minus any movement) in m/s^2
+         *
+         *  Temperature (1Hz)
+         *  Ambient temperature in degrees celsius
          */
         void getVector(vector_type_t vector_type, vector &vector);
 
@@ -593,9 +626,8 @@ namespace pico::communication::sensors::imu::bno055 {
          * @param offset
          * @return
          */
-        float convertRawDeg(uint8_t rawDeg) {
-            return validateReading(
-                    static_cast<float>(rawDeg) / LSB_D_PER_S_TO_D_PER_S);
+        float convertRawDeg(float rawDeg) {
+            return validateReading( rawDeg / LSB_D_PER_S_TO_D_PER_S);
         }
 
         /**
@@ -607,11 +639,11 @@ namespace pico::communication::sensors::imu::bno055 {
          * @param offset
          * @return
          */
-        float convertRawLin(uint8_t rawLin) {
+        float convertRawLin(float rawLin) {
 //            return validateReading(
 //                    static_cast<float>(rawLin - offset) * ACCELERATION_GRAVITY /
 //                    ACCELERATION_SENSITIVITY);
-            return validateReading(static_cast<float>(rawLin)  / ACCELERATION_SENSITIVITY);
+            return validateReading(rawLin / ACCELERATION_SENSITIVITY);
         }
 
         /**
@@ -631,10 +663,10 @@ namespace pico::communication::sensors::imu::bno055 {
          */
         void i2cReadRegisters(bno055_reg_t reg, uint8_t *data, size_t len);
 
-//        /**
-//         * Add any errors to the error handler that have came up due to calls to validateReading.
-//         */
-//        void addValidationErrors();
+        /**
+         * Add any errors to the error handler that have came up due to calls to validateReading.
+         */
+        void addValidationErrors();//TODO:
 
     };
 } // namespace pico::communication::sensors::imu::bno055
