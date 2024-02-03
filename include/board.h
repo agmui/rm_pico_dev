@@ -29,8 +29,8 @@
 #define CAN1_RX_GPIO 4//gpio
 #define CAN1_TX_GPIO 5//gpio
 
-#define IMU_SDA_GPIO 4
-#define IMU_SCL_GPIO 5
+#define IMU_SDA_GPIO 2
+#define IMU_SCL_GPIO 3
 
 #define QUAD1_A_GPIO 8
 #define QUAD1_B_GPIO 9
@@ -45,8 +45,7 @@
 #define LED_B_GPIO 22
 
 
-namespace Board
-{
+namespace Board {
     const pico::communication::serial::Uart::UartPort REMOTE_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart0;
     const pico::communication::serial::Uart::UartPort REF_SERIAL_UART_PORT = pico::communication::serial::Uart::UartPort::Uart1;
 
